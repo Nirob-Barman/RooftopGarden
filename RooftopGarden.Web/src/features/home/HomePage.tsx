@@ -7,17 +7,26 @@ import { TestimonialsSection } from './TestimonialsSection'
 import { BlogPreviewSection } from './BlogPreviewSection'
 import { CtaBannerSection } from './CtaBannerSection'
 import { Footer } from './Footer'
+import { LazySection } from '../../components/LazySection'
 
 export function HomePage() {
   return (
     <div>
       <HeroSection />
       <CategoriesSection />
-      <FeaturedProductsSection />
-      <ServicesSection />
+      <LazySection>
+        <FeaturedProductsSection />
+      </LazySection>
+      <LazySection>
+        <ServicesSection />
+      </LazySection>
       <WhyRooftopGardenSection />
-      <TestimonialsSection />
-      <BlogPreviewSection />
+      <LazySection>
+        <TestimonialsSection />
+      </LazySection>
+      <LazySection>
+        <BlogPreviewSection />
+      </LazySection>
       <CtaBannerSection />
       <Footer />
     </div>
