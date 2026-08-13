@@ -2,15 +2,13 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RooftopGarden.Domain.Constants;
 using RooftopGarden.Infrastructure.Identity;
 
 namespace RooftopGarden.Infrastructure.Persistence.Seed;
 
 public static class IdentitySeeder
 {
-    public const string AdminRole = "Admin";
-    public const string CustomerRole = "Customer";
-
     private const string AdminEmail = "admin@rooftopgarden.com";
 
     public static async Task SeedAsync(IServiceProvider services)
@@ -19,7 +17,7 @@ public static class IdentitySeeder
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var logger = services.GetRequiredService<ILoggerFactory>().CreateLogger("IdentitySeeder");
 
-        foreach (var roleName in new[] { AdminRole, CustomerRole })
+        foreach (var roleName in new[] { Roles.Admin, Roles.Customer })
         {
             if (!await roleManager.RoleExistsAsync(roleName))
             {
@@ -51,7 +49,7 @@ public static class IdentitySeeder
             return;
         }
 
-        await userManager.AddToRoleAsync(admin, AdminRole);
+        await userManager.AddToRoleAsync(admin, Roles.Admin);
 
         logger.LogWarning(
             "Seeded initial admin user {Email} with password: {Password} — change this after first login. " +

@@ -28,6 +28,8 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
         return services;
     }

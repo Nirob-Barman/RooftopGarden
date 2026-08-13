@@ -1,0 +1,35 @@
+using MediatR;
+using RooftopGarden.Application.Common.Interfaces;
+using RooftopGarden.Application.Features.Auth.Dtos;
+
+namespace RooftopGarden.Application.Features.Auth.Commands.UpdateProfile;
+
+public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, ProfileDto>
+{
+    private readonly IIdentityService _identityService;
+
+    public UpdateProfileCommandHandler(IIdentityService identityService)
+    {
+        _identityService = identityService;
+    }
+
+    public async Task<ProfileDto> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+    {
+        var updated = await _identityService.UpdateProfileAsync(
+            request.UserId,
+            request.FullName,
+            request.PhoneNumber,
+            request.Address,
+            request.ProfileImageUrl);
+
+        if (!updated)
+        {
+            throw new InvalidOperationException("User not found.");
+        }
+
+        var profile = await _identityService.GetProfileAsync(request.UserId)
+            ?? throw new InvalidOperationException("User not found.");
+
+        return new ProfileDto(profile.Email, profile.FullName, profile.PhoneNumber, profile.Address, profile.ProfileImageUrl, profile.Role);
+    }
+}

@@ -24,6 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Booking> Bookings => Set<Booking>();
     public DbSet<Wishlist> Wishlists => Set<Wishlist>();
     public DbSet<Blog> Blogs => Set<Blog>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RooftopGarden.Application.Common.Interfaces;
+using RooftopGarden.Application.Common.Models.Identity;
 
 namespace RooftopGarden.Infrastructure.Authentication;
 
@@ -16,7 +17,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _configuration = configuration;
     }
 
-    public string GenerateToken(string userId, string email, string fullName, string role)
+    public AccessToken GenerateToken(string userId, string email, string fullName, string role)
     {
         var key = _configuration["Jwt:Key"]
             ?? throw new InvalidOperationException("Jwt:Key is not configured.");
@@ -24,7 +25,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             ?? throw new InvalidOperationException("Jwt:Issuer is not configured.");
         var audience = _configuration["Jwt:Audience"]
             ?? throw new InvalidOperationException("Jwt:Audience is not configured.");
-        var expiryMinutes = _configuration.GetValue("Jwt:ExpiryMinutes", 60);
+        var expiryMinutes = _configuration.GetValue("Jwt:ExpiryMinutes", 15);
 
         var claims = new List<Claim>
         {
@@ -38,14 +39,17 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+        var expiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes);
 
         var token = new JwtSecurityToken(
             issuer: issuer,
             audience: audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
+            expires: expiresAt,
             signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var rawToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return new AccessToken(rawToken, expiresAt);
     }
 }
