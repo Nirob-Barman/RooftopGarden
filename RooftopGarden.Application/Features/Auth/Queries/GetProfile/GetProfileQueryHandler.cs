@@ -1,4 +1,5 @@
 using MediatR;
+using RooftopGarden.Application.Common.Exceptions;
 using RooftopGarden.Application.Common.Interfaces;
 using RooftopGarden.Application.Features.Auth.Dtos;
 
@@ -16,7 +17,7 @@ public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, ProfileDt
     public async Task<ProfileDto> Handle(GetProfileQuery request, CancellationToken cancellationToken)
     {
         var profile = await _identityService.GetProfileAsync(request.UserId)
-            ?? throw new InvalidOperationException("User not found.");
+            ?? throw new NotFoundException("User", request.UserId);
 
         return new ProfileDto(profile.Email, profile.FullName, profile.PhoneNumber, profile.Address, profile.ProfileImageUrl, profile.Role);
     }
