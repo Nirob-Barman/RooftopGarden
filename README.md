@@ -25,8 +25,9 @@ Request flow: `Controller → MediatR (ISender) → Command/Query Handler → Ap
 - **Reviews** — purchase-verified reviews (rating 1-5), public read, admin moderation
 - **Wishlist** — add/remove products, no admin surface (purely customer-facing)
 - **Rooftop Gardening Services** — public browsing + admin CRUD on the same route, visibility derived from the caller's role
+- **Bookings** — book a service, cancel eligible bookings, admin approve/reject and filter by status
 
-Still to come: Bookings, Blog, Admin Dashboard.
+Still to come: Blog, Admin Dashboard.
 
 A React (Vite + TypeScript) client lives alongside this API in `RooftopGarden.Web/` — see that folder for its own setup.
 
