@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using RooftopGarden.Application.Common.Interfaces;
+using RooftopGarden.Application.Common.Models;
 using RooftopGarden.Application.Common.Models.Identity;
 using RooftopGarden.Domain.Constants;
 
@@ -89,5 +90,60 @@ public class IdentityService : IIdentityService
     {
         var customers = await _userManager.GetUsersInRoleAsync(Roles.Customer);
         return customers.Count;
+    }
+
+    public async Task<PagedResult<CustomerAccount>> GetCustomersAsync(string? search, int pageNumber, int pageSize)
+    {
+        var customers = await _userManager.GetUsersInRoleAsync(Roles.Customer);
+
+        var filtered = customers
+            .Where(u => string.IsNullOrWhiteSpace(search)
+                || (u.Email?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false)
+                || u.FullName.Contains(search, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(u => u.FullName)
+            .ToList();
+
+        var page = filtered
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var accounts = new List<CustomerAccount>(page.Count);
+        foreach (var user in page)
+        {
+            accounts.Add(await ToCustomerAccountAsync(user));
+        }
+
+        return new PagedResult<CustomerAccount>(accounts, filtered.Count, pageNumber, pageSize);
+    }
+
+    public async Task<CustomerAccount?> GetCustomerAccountByIdAsync(string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null || !await _userManager.IsInRoleAsync(user, Roles.Customer))
+        {
+            return null;
+        }
+
+        return await ToCustomerAccountAsync(user);
+    }
+
+    public async Task<bool> SetCustomerLockoutAsync(string userId, bool locked)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null || !await _userManager.IsInRoleAsync(user, Roles.Customer))
+        {
+            return false;
+        }
+
+        await _userManager.SetLockoutEnabledAsync(user, true);
+        var result = await _userManager.SetLockoutEndDateAsync(user, locked ? DateTimeOffset.MaxValue : null);
+        return result.Succeeded;
+    }
+
+    private async Task<CustomerAccount> ToCustomerAccountAsync(ApplicationUser user)
+    {
+        var isLockedOut = await _userManager.IsLockedOutAsync(user);
+        return new CustomerAccount(user.Id, user.Email!, user.FullName, user.PhoneNumber, user.Address, isLockedOut);
     }
 }

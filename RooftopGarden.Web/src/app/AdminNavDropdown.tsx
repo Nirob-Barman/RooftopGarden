@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 
 const ADMIN_LINKS = [
   { to: '/admin/dashboard', label: 'Dashboard' },
+  { to: '/admin/customers', label: 'Customers' },
   { to: '/admin/products', label: 'Products' },
   { to: '/admin/categories', label: 'Categories' },
   { to: '/admin/orders', label: 'Orders' },

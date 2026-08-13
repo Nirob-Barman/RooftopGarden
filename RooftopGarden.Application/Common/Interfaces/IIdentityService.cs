@@ -1,3 +1,4 @@
+using RooftopGarden.Application.Common.Models;
 using RooftopGarden.Application.Common.Models.Identity;
 
 namespace RooftopGarden.Application.Common.Interfaces;
@@ -13,4 +14,10 @@ public interface IIdentityService
     Task<bool> UpdateProfileAsync(string userId, string fullName, string? phoneNumber, string? address, string? profileImageUrl);
 
     Task<int> GetCustomerCountAsync();
+
+    Task<PagedResult<CustomerAccount>> GetCustomersAsync(string? search, int pageNumber, int pageSize);
+
+    Task<CustomerAccount?> GetCustomerAccountByIdAsync(string userId);
+
+    Task<bool> SetCustomerLockoutAsync(string userId, bool locked);
 }
