@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from './hooks'
 import { toggleTheme } from '../features/theme/themeSlice'
 import { useRevokeMutation } from '../features/auth/authApi'
 import { useGetCartQuery } from '../features/cart/cartApi'
+import { AdminNavDropdown } from './AdminNavDropdown'
 
 export function RootLayout() {
   const dispatch = useAppDispatch()
@@ -23,6 +24,9 @@ export function RootLayout() {
           <Link to="/services" className="hover:text-primary">
             Services
           </Link>
+          <Link to="/blog" className="hover:text-primary">
+            Blog
+          </Link>
           {user?.role === 'Customer' && (
             <>
               <Link to="/cart" className="hover:text-primary">
@@ -42,28 +46,7 @@ export function RootLayout() {
               </Link>
             </>
           )}
-          {user?.role === 'Admin' && (
-            <>
-              <Link to="/admin/products" className="hover:text-primary">
-                Admin: Products
-              </Link>
-              <Link to="/admin/categories" className="hover:text-primary">
-                Admin: Categories
-              </Link>
-              <Link to="/admin/orders" className="hover:text-primary">
-                Admin: Orders
-              </Link>
-              <Link to="/admin/payments" className="hover:text-primary">
-                Admin: Payments
-              </Link>
-              <Link to="/admin/reviews" className="hover:text-primary">
-                Admin: Reviews
-              </Link>
-              <Link to="/admin/bookings" className="hover:text-primary">
-                Admin: Bookings
-              </Link>
-            </>
-          )}
+          {user?.role === 'Admin' && <AdminNavDropdown />}
           {user ? (
             <>
               <Link to="/profile" className="hover:text-primary">
