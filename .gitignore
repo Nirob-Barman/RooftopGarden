@@ -64,6 +64,11 @@ anthropic.*
 plan.md
 PLAN.md
 
+## RooftopGarden.Web (React client) — also covered by its own nested .gitignore
+RooftopGarden.Web/node_modules/
+RooftopGarden.Web/dist/
+RooftopGarden.Web/.env*
+
 # Claude config / logs
 *.claude.json
 claude.log
