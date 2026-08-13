@@ -1,22 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import type { RootState } from './store'
-import { setCredentials, logout } from '../features/auth/authSlice'
+import { setCredentials, logout, type AuthResponse } from '../features/auth/authSlice'
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_URL,
+  credentials: 'include', // send/receive the httpOnly refreshToken cookie cross-origin
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.accessToken
     if (token) headers.set('Authorization', `Bearer ${token}`)
     return headers
   },
 })
-
-interface RefreshResponse {
-  accessToken: string
-  refreshToken: string
-  user: { id: string; fullName: string; email: string; roles: string[] }
-}
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
@@ -26,21 +21,13 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   let result = await rawBaseQuery(args, api, extraOptions)
 
   if (result.error?.status === 401) {
-    const refreshToken = (api.getState() as RootState).auth.refreshToken
+    // No token to check client-side — the refresh token lives only in the httpOnly
+    // cookie, which the browser attaches automatically. Just ask the server.
+    const refreshResult = await rawBaseQuery({ url: '/api/auth/refresh', method: 'POST' }, api, extraOptions)
 
-    if (refreshToken) {
-      const refreshResult = await rawBaseQuery(
-        { url: '/api/auth/refresh', method: 'POST', body: { refreshToken } },
-        api,
-        extraOptions,
-      )
-
-      if (refreshResult.data) {
-        api.dispatch(setCredentials(refreshResult.data as RefreshResponse))
-        result = await rawBaseQuery(args, api, extraOptions)
-      } else {
-        api.dispatch(logout())
-      }
+    if (refreshResult.data) {
+      api.dispatch(setCredentials(refreshResult.data as AuthResponse))
+      result = await rawBaseQuery(args, api, extraOptions)
     } else {
       api.dispatch(logout())
     }
