@@ -27,6 +27,18 @@ const AdminCategoryList = lazy(() =>
 
 const CartPage = lazy(() => import('../features/cart/CartPage').then((m) => ({ default: m.CartPage })))
 
+const CheckoutPage = lazy(() => import('../features/orders/CheckoutPage').then((m) => ({ default: m.CheckoutPage })))
+const OrderListPage = lazy(() => import('../features/orders/OrderListPage').then((m) => ({ default: m.OrderListPage })))
+const OrderDetailPage = lazy(() =>
+  import('../features/orders/OrderDetailPage').then((m) => ({ default: m.OrderDetailPage })),
+)
+const AdminOrderListPage = lazy(() =>
+  import('../features/orders/admin/AdminOrderListPage').then((m) => ({ default: m.AdminOrderListPage })),
+)
+const AdminOrderDetailPage = lazy(() =>
+  import('../features/orders/admin/AdminOrderDetailPage').then((m) => ({ default: m.AdminOrderDetailPage })),
+)
+
 function withSuspense(element: ReactNode) {
   return <Suspense fallback={<div className="p-6">Loading...</div>}>{element}</Suspense>
 }
@@ -45,6 +57,9 @@ export const router = createBrowserRouter([
         children: [
           { path: '/profile', element: withSuspense(<ProfilePage />) },
           { path: '/cart', element: withSuspense(<CartPage />) },
+          { path: '/checkout', element: withSuspense(<CheckoutPage />) },
+          { path: '/orders', element: withSuspense(<OrderListPage />) },
+          { path: '/orders/:id', element: withSuspense(<OrderDetailPage />) },
         ],
       },
       {
@@ -54,6 +69,8 @@ export const router = createBrowserRouter([
           { path: '/admin/products/new', element: withSuspense(<AdminProductForm />) },
           { path: '/admin/products/:id/edit', element: withSuspense(<AdminProductForm />) },
           { path: '/admin/categories', element: withSuspense(<AdminCategoryList />) },
+          { path: '/admin/orders', element: withSuspense(<AdminOrderListPage />) },
+          { path: '/admin/orders/:id', element: withSuspense(<AdminOrderDetailPage />) },
         ],
       },
     ],

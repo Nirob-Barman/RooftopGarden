@@ -19,12 +19,16 @@ export function RootLayout() {
         <nav className="flex items-center gap-4 text-sm">
           <Link to="/products">Products</Link>
           {user?.role === 'Customer' && (
-            <Link to="/cart">Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}</Link>
+            <>
+              <Link to="/cart">Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}</Link>
+              <Link to="/orders">Orders</Link>
+            </>
           )}
           {user?.role === 'Admin' && (
             <>
               <Link to="/admin/products">Admin: Products</Link>
               <Link to="/admin/categories">Admin: Categories</Link>
+              <Link to="/admin/orders">Admin: Orders</Link>
             </>
           )}
           {user ? (

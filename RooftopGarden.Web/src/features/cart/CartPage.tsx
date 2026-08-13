@@ -29,10 +29,16 @@ export function CartPage() {
           <CartItemRow key={item.id} item={item} />
         ))}
       </div>
-      <div className="mt-4 flex justify-between text-lg font-semibold">
+      <div className="mt-4 flex items-center justify-between text-lg font-semibold">
         <span>Total</span>
         <span>${cart.totalAmount.toFixed(2)}</span>
       </div>
+      <Link
+        to="/checkout"
+        className="mt-4 block w-full rounded bg-green-700 px-3 py-2 text-center text-white"
+      >
+        Proceed to checkout
+      </Link>
     </div>
   )
 }
