@@ -16,7 +16,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _configuration = configuration;
     }
 
-    public string GenerateToken(string userId, string email, string fullName, IEnumerable<string> roles)
+    public string GenerateToken(string userId, string email, string fullName, string role)
     {
         var key = _configuration["Jwt:Key"]
             ?? throw new InvalidOperationException("Jwt:Key is not configured.");
@@ -32,10 +32,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new(ClaimTypes.NameIdentifier, userId),
             new(ClaimTypes.Email, email),
             new(ClaimTypes.Name, fullName),
+            new(ClaimTypes.Role, role),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
