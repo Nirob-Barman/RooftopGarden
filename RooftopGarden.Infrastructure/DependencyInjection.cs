@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RooftopGarden.Application.Common.Interfaces;
+using RooftopGarden.Infrastructure.Authentication;
 using RooftopGarden.Infrastructure.Identity;
 using RooftopGarden.Infrastructure.Persistence;
 
@@ -24,6 +26,8 @@ public static class DependencyInjection
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         return services;
     }
