@@ -37,6 +37,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, A
             accessToken.Token,
             accessToken.ExpiresAt,
             rotated.NewRawToken!,
+            rotated.NewExpiresAt!.Value,
             profile.Email,
             profile.FullName,
             profile.Role);

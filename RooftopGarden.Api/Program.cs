@@ -19,9 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(WebClientCorsPolicy, policy => policy
-        .WithOrigins("http://localhost:5173")
+        .WithOrigins("http://localhost:5173", "http://localhost:5174")
         .AllowAnyHeader()
-        .AllowAnyMethod());
+        .AllowAnyMethod()
+        .AllowCredentials());
 });
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

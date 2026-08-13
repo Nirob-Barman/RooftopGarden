@@ -32,6 +32,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponseDto
             accessToken.Token,
             accessToken.ExpiresAt,
             refreshToken.RawToken,
+            refreshToken.ExpiresAt,
             user.Email,
             user.FullName,
             user.Role);

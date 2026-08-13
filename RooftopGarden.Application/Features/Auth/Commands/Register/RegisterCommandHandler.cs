@@ -42,6 +42,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
             accessToken.Token,
             accessToken.ExpiresAt,
             refreshToken.RawToken,
+            refreshToken.ExpiresAt,
             request.Email,
             request.FullName,
             Roles.Customer);

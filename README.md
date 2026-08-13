@@ -17,7 +17,7 @@ Request flow: `Controller → MediatR (ISender) → Command/Query Handler → Ap
 
 ## Features implemented so far
 
-- **Auth** — register, login, JWT access + refresh tokens (rotation and revoke), profile view/update
+- **Auth** — register, login, JWT access + refresh tokens (rotation and revoke), refresh token stored in an httpOnly cookie (never exposed in the JSON response), profile view/update
 - **Catalog** — categories and products, public browsing (search/filter/paginate) split from admin management
 - **Cart** — add/update/remove items, with server-side stock and availability checks
 - **Orders** — checkout from cart, order history/detail, cancellation, admin status management
