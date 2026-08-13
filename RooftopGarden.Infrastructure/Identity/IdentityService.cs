@@ -84,4 +84,10 @@ public class IdentityService : IIdentityService
         var result = await _userManager.UpdateAsync(user);
         return result.Succeeded;
     }
+
+    public async Task<int> GetCustomerCountAsync()
+    {
+        var customers = await _userManager.GetUsersInRoleAsync(Roles.Customer);
+        return customers.Count;
+    }
 }

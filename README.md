@@ -27,8 +27,9 @@ Request flow: `Controller → MediatR (ISender) → Command/Query Handler → Ap
 - **Rooftop Gardening Services** — public browsing + admin CRUD on the same route, visibility derived from the caller's role
 - **Bookings** — book a service, cancel eligible bookings, admin approve/reject and filter by status
 - **Blog** — public read, admin create/update/delete (any admin, not author-scoped)
+- **Admin Dashboard** — customer/product/order/booking/service counts, orders/bookings broken down by status, revenue (paid payments only)
 
-Still to come: Admin Dashboard.
+All `CLAUDE.md` backend features are now implemented.
 
 A React (Vite + TypeScript) client lives alongside this API in `RooftopGarden.Web/` — see that folder for its own setup.
 

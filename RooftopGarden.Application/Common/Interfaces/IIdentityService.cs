@@ -11,4 +11,6 @@ public interface IIdentityService
     Task<UserProfile?> GetProfileAsync(string userId);
 
     Task<bool> UpdateProfileAsync(string userId, string fullName, string? phoneNumber, string? address, string? profileImageUrl);
+
+    Task<int> GetCustomerCountAsync();
 }
