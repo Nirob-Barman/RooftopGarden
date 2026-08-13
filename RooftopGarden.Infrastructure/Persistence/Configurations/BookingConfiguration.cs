@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RooftopGarden.Domain.Entities;
+using RooftopGarden.Infrastructure.Identity;
 
 namespace RooftopGarden.Infrastructure.Persistence.Configurations;
 
@@ -13,6 +14,11 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(b => b.CustomerId)
             .IsRequired()
             .HasMaxLength(450);
+
+        builder.HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(b => b.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(b => b.Address)
             .IsRequired()

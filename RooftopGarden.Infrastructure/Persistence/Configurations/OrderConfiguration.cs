@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RooftopGarden.Domain.Entities;
+using RooftopGarden.Infrastructure.Identity;
 
 namespace RooftopGarden.Infrastructure.Persistence.Configurations;
 
@@ -13,6 +14,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.CustomerId)
             .IsRequired()
             .HasMaxLength(450);
+
+        builder.HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(o => o.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(o => o.ShippingAddress)
             .IsRequired()

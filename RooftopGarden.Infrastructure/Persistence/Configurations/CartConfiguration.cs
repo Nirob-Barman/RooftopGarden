@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RooftopGarden.Domain.Entities;
+using RooftopGarden.Infrastructure.Identity;
 
 namespace RooftopGarden.Infrastructure.Persistence.Configurations;
 
@@ -15,6 +16,11 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
             .HasMaxLength(450);
 
         builder.HasIndex(c => c.CustomerId).IsUnique();
+
+        builder.HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(c => c.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(c => c.CartItems)
             .WithOne(ci => ci.Cart)

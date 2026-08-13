@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RooftopGarden.Domain.Entities;
+using RooftopGarden.Infrastructure.Identity;
 
 namespace RooftopGarden.Infrastructure.Persistence.Configurations;
 
@@ -25,5 +26,10 @@ public class BlogConfiguration : IEntityTypeConfiguration<Blog>
             .HasMaxLength(450);
 
         builder.HasIndex(b => b.AuthorId);
+
+        builder.HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(b => b.AuthorId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
