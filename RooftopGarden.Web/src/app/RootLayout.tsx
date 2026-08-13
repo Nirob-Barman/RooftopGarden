@@ -11,42 +11,70 @@ export function RootLayout() {
   const { data: cart } = useGetCartQuery(undefined, { skip: user?.role !== 'Customer' })
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-      <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">
-        <Link to="/" className="text-lg font-semibold">
-          RooftopGarden
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="flex items-center justify-between bg-surface px-6 py-4 shadow-sm">
+        <Link to="/" className="text-lg font-semibold text-primary">
+          🌿 RooftopGarden
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
-          <Link to="/products">Products</Link>
-          <Link to="/services">Services</Link>
+        <nav className="flex flex-wrap items-center gap-4 text-sm">
+          <Link to="/products" className="hover:text-primary">
+            Products
+          </Link>
+          <Link to="/services" className="hover:text-primary">
+            Services
+          </Link>
           {user?.role === 'Customer' && (
             <>
-              <Link to="/cart">Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}</Link>
-              <Link to="/orders">Orders</Link>
-              <Link to="/payments">Payments</Link>
-              <Link to="/wishlist">Wishlist</Link>
+              <Link to="/cart" className="hover:text-primary">
+                Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}
+              </Link>
+              <Link to="/orders" className="hover:text-primary">
+                Orders
+              </Link>
+              <Link to="/payments" className="hover:text-primary">
+                Payments
+              </Link>
+              <Link to="/wishlist" className="hover:text-primary">
+                Wishlist
+              </Link>
             </>
           )}
           {user?.role === 'Admin' && (
             <>
-              <Link to="/admin/products">Admin: Products</Link>
-              <Link to="/admin/categories">Admin: Categories</Link>
-              <Link to="/admin/orders">Admin: Orders</Link>
-              <Link to="/admin/payments">Admin: Payments</Link>
-              <Link to="/admin/reviews">Admin: Reviews</Link>
+              <Link to="/admin/products" className="hover:text-primary">
+                Admin: Products
+              </Link>
+              <Link to="/admin/categories" className="hover:text-primary">
+                Admin: Categories
+              </Link>
+              <Link to="/admin/orders" className="hover:text-primary">
+                Admin: Orders
+              </Link>
+              <Link to="/admin/payments" className="hover:text-primary">
+                Admin: Payments
+              </Link>
+              <Link to="/admin/reviews" className="hover:text-primary">
+                Admin: Reviews
+              </Link>
             </>
           )}
           {user ? (
             <>
-              <Link to="/profile">{user.fullName}</Link>
-              <button type="button" onClick={() => revoke()} className="text-red-600">
+              <Link to="/profile" className="hover:text-primary">
+                {user.fullName}
+              </Link>
+              <button type="button" onClick={() => revoke()} className="text-error">
                 Log out
               </button>
             </>
           ) : (
             <>
-              <Link to="/login">Log in</Link>
-              <Link to="/register">Register</Link>
+              <Link to="/login" className="hover:text-primary">
+                Log in
+              </Link>
+              <Link to="/register" className="rounded-full bg-primary px-3 py-1.5 text-white">
+                Register
+              </Link>
             </>
           )}
           <button type="button" onClick={() => dispatch(toggleTheme())} aria-label="Toggle theme">

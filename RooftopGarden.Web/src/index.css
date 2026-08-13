@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* Dark mode is toggled via a `.dark` class on <html> (see themeSlice.ts),
+   not the OS preference — tell Tailwind's `dark:` variant to match that. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #1b4332; /* deep forest green */
+  --color-primary-light: #2d6a4f;
+  --color-secondary: #52b788; /* fresh leaf green */
+  --color-accent: #d97a4b; /* warm terracotta */
+  --color-background: #faf7f2; /* soft cream */
+  --color-surface: #ffffff;
+  --color-foreground: #2b2b2b; /* dark charcoal */
+  --color-success: #2d6a4f;
+  --color-warning: #b45309;
+  --color-error: #b3261e;
+
+  --font-sans: Inter, 'Segoe UI', system-ui, sans-serif;
+}
+
+:root.dark {
+  --color-background: #14231c;
+  --color-surface: #1c2b23;
+  --color-foreground: #ecebe6;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
