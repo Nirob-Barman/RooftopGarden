@@ -52,6 +52,16 @@ const AdminReviewListPage = lazy(() =>
 
 const WishlistPage = lazy(() => import('../features/wishlist/WishlistPage').then((m) => ({ default: m.WishlistPage })))
 
+const ServiceListPage = lazy(() =>
+  import('../features/gardening-services/ServiceListPage').then((m) => ({ default: m.ServiceListPage })),
+)
+const ServiceDetailPage = lazy(() =>
+  import('../features/gardening-services/ServiceDetailPage').then((m) => ({ default: m.ServiceDetailPage })),
+)
+const AdminServiceForm = lazy(() =>
+  import('../features/gardening-services/admin/AdminServiceForm').then((m) => ({ default: m.AdminServiceForm })),
+)
+
 function withSuspense(element: ReactNode) {
   return <Suspense fallback={<div className="p-6">Loading...</div>}>{element}</Suspense>
 }
@@ -65,6 +75,8 @@ export const router = createBrowserRouter([
       { path: '/register', element: withSuspense(<RegisterPage />) },
       { path: '/products', element: withSuspense(<ProductListPage />) },
       { path: '/products/:id', element: withSuspense(<ProductDetailPage />) },
+      { path: '/services', element: withSuspense(<ServiceListPage />) },
+      { path: '/services/:id', element: withSuspense(<ServiceDetailPage />) },
       {
         element: <ProtectedRoute />,
         children: [
@@ -88,6 +100,13 @@ export const router = createBrowserRouter([
           { path: '/admin/orders/:id', element: withSuspense(<AdminOrderDetailPage />) },
           { path: '/admin/payments', element: withSuspense(<AdminPaymentListPage />) },
           { path: '/admin/reviews', element: withSuspense(<AdminReviewListPage />) },
+        ],
+      },
+      {
+        element: <AdminRoute />,
+        children: [
+          { path: '/services/new', element: withSuspense(<AdminServiceForm />) },
+          { path: '/services/:id/edit', element: withSuspense(<AdminServiceForm />) },
         ],
       },
     ],

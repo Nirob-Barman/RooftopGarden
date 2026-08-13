@@ -18,6 +18,7 @@ export function RootLayout() {
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           <Link to="/products">Products</Link>
+          <Link to="/services">Services</Link>
           {user?.role === 'Customer' && (
             <>
               <Link to="/cart">Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}</Link>
