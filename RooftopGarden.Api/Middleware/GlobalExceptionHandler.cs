@@ -73,6 +73,16 @@ public class GlobalExceptionHandler : IExceptionHandler
             unauthorizedAccessException.Message,
             Array.Empty<string>()),
 
+        ArgumentException argumentException => (
+            HttpStatusCode.BadRequest,
+            argumentException.Message,
+            Array.Empty<string>()),
+
+        InvalidOperationException invalidOperationException => (
+            HttpStatusCode.Conflict,
+            invalidOperationException.Message,
+            Array.Empty<string>()),
+
         _ => (
             HttpStatusCode.InternalServerError,
             "An unexpected error occurred.",
