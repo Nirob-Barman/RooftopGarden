@@ -126,6 +126,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+    await DemoDataSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 app.UseExceptionHandler();
