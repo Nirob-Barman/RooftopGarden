@@ -76,6 +76,10 @@ const AdminBlogForm = lazy(() =>
   import('../features/blog/admin/AdminBlogForm').then((m) => ({ default: m.AdminBlogForm })),
 )
 
+const AdminDashboardPage = lazy(() =>
+  import('../features/dashboard/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage })),
+)
+
 function withSuspense(element: ReactNode) {
   return <Suspense fallback={<div className="p-6">Loading...</div>}>{element}</Suspense>
 }
@@ -110,6 +114,7 @@ export const router = createBrowserRouter([
       {
         element: <AdminRoute />,
         children: [
+          { path: '/admin/dashboard', element: withSuspense(<AdminDashboardPage />) },
           { path: '/admin/products', element: withSuspense(<AdminProductListPage />) },
           { path: '/admin/products/new', element: withSuspense(<AdminProductForm />) },
           { path: '/admin/products/:id/edit', element: withSuspense(<AdminProductForm />) },
