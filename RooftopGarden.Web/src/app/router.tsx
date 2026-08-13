@@ -62,6 +62,14 @@ const AdminServiceForm = lazy(() =>
   import('../features/gardening-services/admin/AdminServiceForm').then((m) => ({ default: m.AdminServiceForm })),
 )
 
+const BookingForm = lazy(() => import('../features/bookings/BookingForm').then((m) => ({ default: m.BookingForm })))
+const BookingListPage = lazy(() =>
+  import('../features/bookings/BookingListPage').then((m) => ({ default: m.BookingListPage })),
+)
+const AdminBookingListPage = lazy(() =>
+  import('../features/bookings/admin/AdminBookingListPage').then((m) => ({ default: m.AdminBookingListPage })),
+)
+
 function withSuspense(element: ReactNode) {
   return <Suspense fallback={<div className="p-6">Loading...</div>}>{element}</Suspense>
 }
@@ -87,6 +95,8 @@ export const router = createBrowserRouter([
           { path: '/orders/:id', element: withSuspense(<OrderDetailPage />) },
           { path: '/payments', element: withSuspense(<PaymentHistoryPage />) },
           { path: '/wishlist', element: withSuspense(<WishlistPage />) },
+          { path: '/bookings', element: withSuspense(<BookingListPage />) },
+          { path: '/bookings/new', element: withSuspense(<BookingForm />) },
         ],
       },
       {
@@ -100,6 +110,7 @@ export const router = createBrowserRouter([
           { path: '/admin/orders/:id', element: withSuspense(<AdminOrderDetailPage />) },
           { path: '/admin/payments', element: withSuspense(<AdminPaymentListPage />) },
           { path: '/admin/reviews', element: withSuspense(<AdminReviewListPage />) },
+          { path: '/admin/bookings', element: withSuspense(<AdminBookingListPage />) },
         ],
       },
       {

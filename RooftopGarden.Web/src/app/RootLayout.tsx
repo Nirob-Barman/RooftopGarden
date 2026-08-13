@@ -37,6 +37,9 @@ export function RootLayout() {
               <Link to="/wishlist" className="hover:text-primary">
                 Wishlist
               </Link>
+              <Link to="/bookings" className="hover:text-primary">
+                Bookings
+              </Link>
             </>
           )}
           {user?.role === 'Admin' && (
@@ -55,6 +58,9 @@ export function RootLayout() {
               </Link>
               <Link to="/admin/reviews" className="hover:text-primary">
                 Admin: Reviews
+              </Link>
+              <Link to="/admin/bookings" className="hover:text-primary">
+                Admin: Bookings
               </Link>
             </>
           )}
