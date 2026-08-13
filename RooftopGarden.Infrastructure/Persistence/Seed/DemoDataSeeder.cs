@@ -247,16 +247,66 @@ public static class DemoDataSeeder
                 "Routine pruning, feeding, and pest check for your rooftop garden."),
             ("Vertical Garden Installation", 280.00m, TimeSpan.FromHours(5),
                 "Space-saving vertical planting systems for balconies and walls."),
+
+            // Sourced from a second reference dataset the user pasted (name + description only —
+            // price/duration invented to fit this app's schema).
+            ("Garden Design", 150.00m, TimeSpan.FromHours(2),
+                "Our expert team will help you design the perfect rooftop garden for your space."),
+            ("Plant Installation", 200.00m, TimeSpan.FromHours(3),
+                "Let our skilled team install a wide variety of plants and flowers in your rooftop garden."),
+            ("Irrigation System", 250.00m, TimeSpan.FromHours(4),
+                "We'll set up a smart irrigation system to keep your rooftop garden lush and healthy."),
+            ("Greenhouse Installation", 800.00m, TimeSpan.FromHours(8),
+                "Get a custom-built greenhouse for year-round gardening and protection for your plants."),
+            ("Roof Repairs", 300.00m, TimeSpan.FromHours(5),
+                "If your rooftop needs repairs, we offer expert services to ensure a safe and stable garden."),
+            ("Landscaping", 400.00m, TimeSpan.FromHours(6),
+                "Transform your rooftop into a beautiful landscape with our professional landscaping services."),
+            ("Outdoor Furniture", 180.00m, TimeSpan.FromHours(2),
+                "Discover a wide range of outdoor furniture options to enhance your rooftop garden."),
+            ("Lighting Solutions", 220.00m, TimeSpan.FromHours(3),
+                "We offer creative and efficient lighting solutions to illuminate your rooftop garden."),
+            ("Rooftop Maintenance", 90.00m, TimeSpan.FromHours(1.5),
+                "Ensure your rooftop garden stays in top condition with our maintenance services."),
+            ("Garden Maintenance", 90.00m, TimeSpan.FromHours(1.5),
+                "Let our team take care of all the maintenance tasks to keep your rooftop garden thriving."),
+            ("Composting", 60.00m, TimeSpan.FromHours(1),
+                "Learn about composting and how to create nutrient-rich compost for your rooftop garden."),
+            ("Lawn Care", 70.00m, TimeSpan.FromHours(1.5),
+                "Maintain a beautiful and healthy lawn with our expert lawn care services."),
+            ("Pest Control", 100.00m, TimeSpan.FromHours(1.5),
+                "Keep your rooftop garden free from pests with our effective pest control solutions."),
+            ("Vertical Gardening", 280.00m, TimeSpan.FromHours(4),
+                "Create a beautiful and space-saving vertical garden on your rooftop with our expertise."),
+            ("Fruit Trees", 150.00m, TimeSpan.FromHours(2),
+                "Add fruit trees to your rooftop garden and enjoy fresh fruits right at your home."),
+            ("Herb Garden", 80.00m, TimeSpan.FromHours(1.5),
+                "Grow a variety of herbs in your rooftop garden for fresh flavors in your cooking."),
+            ("Rooftop Oasis", 500.00m, TimeSpan.FromHours(6),
+                "Create a serene rooftop oasis with comfortable seating and relaxing ambiance."),
+            ("Sustainable Practices", 60.00m, TimeSpan.FromHours(1),
+                "Learn about sustainable gardening practices to reduce environmental impact."),
+            ("Organic Farming", 120.00m, TimeSpan.FromHours(2),
+                "Discover the benefits of organic farming and grow fresh produce naturally."),
+            ("Roof Insulation", 600.00m, TimeSpan.FromHours(6),
+                "Improve energy efficiency by adding roof insulation for a cooler rooftop space."),
+            ("Rainwater Harvesting", 350.00m, TimeSpan.FromHours(4),
+                "Collect rainwater to water your garden and contribute to water conservation."),
+            ("Greenhouse Construction", 900.00m, TimeSpan.FromHours(10),
+                "Build a functional and efficient greenhouse to extend your growing season."),
+            ("Green Roof Design", 450.00m, TimeSpan.FromHours(5),
+                "Let our experts design and create a beautiful and sustainable green roof for your property."),
         };
 
-        var existingNames = await dbContext.Services.Select(s => s.Name).ToListAsync();
-        var existingSet = existingNames.ToHashSet();
+        var existingSet = (await dbContext.Services.Select(s => s.Name).ToListAsync()).ToHashSet();
         int created = 0, skipped = 0;
 
         foreach (var (name, price, duration, description) in wanted)
         {
-            if (existingSet.Contains(name))
+            if (!existingSet.Add(name))
             {
+                // Add() returns false both for rows already in the DB and for a duplicate
+                // name earlier in this same `wanted` list — either way, don't insert twice.
                 skipped++;
                 continue;
             }
