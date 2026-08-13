@@ -31,14 +31,14 @@ public static class DemoDataSeeder
         var (categoriesResult, categoryIdsByName) = await SeedCategoriesAsync(dbContext);
         var (productsResult, productIdsByName) = await SeedProductsAsync(dbContext, categoryIdsByName);
         var servicesResult = await SeedServicesAsync(dbContext);
-        var (customersResult, customerIds) = await SeedDemoCustomersAsync(userManager);
+        var (customersResult, customerIdsByName) = await SeedDemoCustomersAsync(userManager);
 
         var admin = await userManager.FindByEmailAsync(AdminEmail);
         var blogsResult = admin is null
             ? new SeedStepResult(0, 0)
             : await SeedBlogPostsAsync(dbContext, admin.Id);
 
-        var reviewsResult = await SeedReviewsAsync(dbContext, productIdsByName, customerIds);
+        var reviewsResult = await SeedReviewsAsync(dbContext, productIdsByName, customerIdsByName);
 
         await dbContext.SaveChangesAsync(CancellationToken.None);
 
@@ -273,24 +273,39 @@ public static class DemoDataSeeder
         return new SeedStepResult(created, skipped);
     }
 
-    private static async Task<(SeedStepResult, List<string>)> SeedDemoCustomersAsync(UserManager<ApplicationUser> userManager)
+    private static async Task<(SeedStepResult, Dictionary<string, string>)> SeedDemoCustomersAsync(UserManager<ApplicationUser> userManager)
     {
-        var wanted = new[]
+        // Used directly for cart/order/booking demo flows.
+        var wanted = new List<string>
         {
-            ("alice.green@example.com", "Alice Green"),
-            ("ben.carter@example.com", "Ben Carter"),
-            ("priya.sharma@example.com", "Priya Sharma"),
+            "Alice Green",
+            "Ben Carter",
+            "Priya Sharma",
         };
 
-        var ids = new List<string>();
+        // Reviewer identities for the testimonial-style reviews in SeedReviewsAsync —
+        // one account per name so each review has a real customer FK behind it.
+        wanted.AddRange(new[]
+        {
+            "Sophia Jones", "Olivia Davis", "Isabella Hill", "Ethan Lopez", "Sophia Wilson",
+            "Emily Hernandez", "Noah Taylor", "Daniel Moore", "James Gonzalez", "Jane Doe",
+            "MJ Doe", "Emma Anderson", "Sarah Smith", "Alexander Lee", "Alexander Taylor",
+            "James Wilson", "Emily Brown", "Ava Flores", "Robert Johnson", "Mia Garcia",
+            "Michael Rodriguez", "William Perez", "John Doe", "Olivia Martin", "Ava Martinez",
+            "Michael Williams", "William Miller",
+        });
+
+        var idsByName = new Dictionary<string, string>();
         int created = 0, skipped = 0;
 
-        foreach (var (email, fullName) in wanted)
+        foreach (var fullName in wanted)
         {
+            var email = $"{fullName.ToLowerInvariant().Replace(" ", ".")}@example.com";
+
             var existingUser = await userManager.FindByEmailAsync(email);
             if (existingUser is not null)
             {
-                ids.Add(existingUser.Id);
+                idsByName[fullName] = existingUser.Id;
                 skipped++;
                 continue;
             }
@@ -310,11 +325,11 @@ public static class DemoDataSeeder
             }
 
             await userManager.AddToRoleAsync(user, Roles.Customer);
-            ids.Add(user.Id);
+            idsByName[fullName] = user.Id;
             created++;
         }
 
-        return (new SeedStepResult(created, skipped), ids);
+        return (new SeedStepResult(created, skipped), idsByName);
     }
 
     private static async Task<SeedStepResult> SeedBlogPostsAsync(ApplicationDbContext dbContext, string authorId)
@@ -361,21 +376,53 @@ public static class DemoDataSeeder
     private static async Task<SeedStepResult> SeedReviewsAsync(
         ApplicationDbContext dbContext,
         Dictionary<string, int> productIdsByName,
-        List<string> customerIds)
+        Dictionary<string, string> customerIdsByName)
     {
-        if (customerIds.Count < 2)
+        // (reviewer name, product name, rating, comment) — the first batch is tied to a
+        // specific seeded product on purpose; the testimonial batch below isn't about any
+        // particular plant, so it's distributed round-robin across the seeded catalog instead.
+        var productSpecific = new[]
         {
-            return new SeedStepResult(0, 0);
-        }
-
-        var wanted = new[]
-        {
-            (customerIds[0], "Echeveria Elegans", 5, "Thriving on my sunny balcony — very easy to care for!"),
-            (customerIds[1], "Basil - Genovese", 4, "Grew fast, great for pasta nights."),
-            (customerIds.Count > 2 ? customerIds[2] : customerIds[0], "Rooftop Tomato - Cherry", 5, "Sweet cherry tomatoes all summer long."),
-            (customerIds[0], "Marigold", 4, "Kept the pests away from my veggies as promised."),
-            (customerIds[1], "Rosemary", 5, "Survived the whole winter on my exposed rooftop."),
+            ("Alice Green", "Echeveria Elegans", 5, "Thriving on my sunny balcony — very easy to care for!"),
+            ("Ben Carter", "Basil - Genovese", 4, "Grew fast, great for pasta nights."),
+            ("Priya Sharma", "Rooftop Tomato - Cherry", 5, "Sweet cherry tomatoes all summer long."),
+            ("Alice Green", "Marigold", 4, "Kept the pests away from my veggies as promised."),
+            ("Ben Carter", "Rosemary", 5, "Survived the whole winter on my exposed rooftop."),
         };
+
+        // Testimonials from a reference dataset — "Grow Green" replaced with "RooftopGarden".
+        var testimonials = new[]
+        {
+            ("Sophia Jones", 5, "I recently purchased a plant from RooftopGarden, and it arrived in perfect condition. The packaging was excellent, ensuring the plant's safety during transit."),
+            ("Olivia Davis", 5, "RooftopGarden offers an impressive selection of organic seeds. My plants are thriving, and I'm delighted with the results. Highly recommended for gardeners!"),
+            ("Isabella Hill", 4, "I was new to rooftop gardening, but RooftopGarden's blog and guides helped me get started. Their resources are valuable for beginners."),
+            ("Ethan Lopez", 5, "The variety of products and accessories is impressive. Whether you're a beginner or an experienced gardener, RooftopGarden has something for you."),
+            ("Sophia Wilson", 4, "I appreciate RooftopGarden's commitment to sustainability and eco-friendly products. It aligns with my values as a conscious consumer."),
+            ("Emily Hernandez", 4, "I've ordered gardening tools and accessories from RooftopGarden, and they are durable and reliable. Makes my gardening tasks easier."),
+            ("Noah Taylor", 5, "I've been a loyal customer of RooftopGarden for years. Their products are always of the highest quality, and their team is knowledgeable and friendly."),
+            ("Daniel Moore", 5, "The shipping is fast, and the packaging ensures that delicate plants arrive undamaged. I'm satisfied with the service and products."),
+            ("James Gonzalez", 5, "RooftopGarden's website is my go-to for all my gardening needs. The layout is user-friendly, and the product descriptions are informative."),
+            ("Jane Doe", 3, "Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like). It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."),
+            ("MJ Doe", 5, "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
+            ("Emma Anderson", 5, "I recently started my rooftop garden and found everything I needed on RooftopGarden's website. The experience has been wonderful, and I'm excited to watch my plants grow."),
+            ("Sarah Smith", 4, "I found the product to be incredibly useful and easy to use. The interface is intuitive, and it has all the features I need. Highly recommend it!"),
+            ("Alexander Lee", 5, "I love the community aspect of RooftopGarden. Their blog and social media posts keep me inspired and connected to other gardeners."),
+            ("Alexander Taylor", 4, "The prices at RooftopGarden are competitive, and they often have great deals. I've saved a lot while building my rooftop garden with them."),
+            ("James Wilson", 5, "RooftopGarden's customer service team went above and beyond to help me with an issue. They are professional and genuinely care about their customers."),
+            ("Emily Brown", 4, "I love the variety of products available on RooftopGarden. The quality is excellent, and the prices are reasonable. Definitely worth trying!"),
+            ("Ava Flores", 5, "I've received compliments on my rooftop garden from friends and family. All thanks to the high-quality plants I got from RooftopGarden."),
+            ("Robert Johnson", 5, "This is by far the best service I have ever used. The customer support is outstanding, and the product itself is top-notch. I couldn't be happier!"),
+            ("Mia Garcia", 5, "I've purchased several plants from RooftopGarden, and each one arrived in excellent condition. They take care in packing and shipping."),
+            ("Michael Rodriguez", 5, "The online shopping experience on RooftopGarden's website is smooth and enjoyable. I can easily find what I need and place an order quickly."),
+            ("William Perez", 5, "The variety of plant seeds available on RooftopGarden's website is impressive. I can't wait to see my rooftop garden in full bloom."),
+            ("John Doe", 2, "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."),
+            ("Olivia Martin", 5, "I had some questions about rooftop gardening, and the RooftopGarden team was quick to respond and provide helpful information."),
+            ("Ava Martinez", 5, "The quality of RooftopGarden's products is unmatched. I've recommended them to all my gardening friends, and they are equally impressed."),
+            ("Michael Williams", 5, "As a rooftop gardening enthusiast, I am thrilled with the range of gardening tools and accessories they offer. Fast delivery and great customer service!"),
+            ("William Miller", 4, "The website is easy to navigate, and the checkout process is seamless. I received updates about my order, and it arrived on time. Satisfied with my purchase!"),
+        };
+
+        var productIdsInOrder = productIdsByName.OrderBy(kvp => kvp.Key, StringComparer.Ordinal).Select(kvp => kvp.Value).ToList();
 
         var existingPairs = (await dbContext.Reviews
             .Select(r => new { r.CustomerId, r.ProductId })
@@ -385,22 +432,40 @@ public static class DemoDataSeeder
 
         int created = 0, skipped = 0;
 
-        foreach (var (customerId, productName, rating, comment) in wanted)
+        void AddReview(string reviewerName, int productId, int rating, string comment)
         {
-            if (!productIdsByName.TryGetValue(productName, out var productId))
+            if (!customerIdsByName.TryGetValue(reviewerName, out var customerId))
             {
-                continue; // product wasn't seeded/found — nothing to attach the review to
+                return; // reviewer account wasn't seeded/found — nothing to attach the review to
             }
 
             if (existingPairs.Contains((customerId, productId)))
             {
                 skipped++;
-                continue;
+                return;
             }
 
             dbContext.Reviews.Add(new Review(productId, customerId, rating, comment));
             existingPairs.Add((customerId, productId));
             created++;
+        }
+
+        foreach (var (reviewerName, productName, rating, comment) in productSpecific)
+        {
+            if (productIdsByName.TryGetValue(productName, out var productId))
+            {
+                AddReview(reviewerName, productId, rating, comment);
+            }
+        }
+
+        if (productIdsInOrder.Count > 0)
+        {
+            for (var i = 0; i < testimonials.Length; i++)
+            {
+                var (reviewerName, rating, comment) = testimonials[i];
+                var productId = productIdsInOrder[i % productIdsInOrder.Count];
+                AddReview(reviewerName, productId, rating, comment);
+            }
         }
 
         if (created > 0)
