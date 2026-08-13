@@ -1,0 +1,41 @@
+import { Link, Outlet } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from './hooks'
+import { toggleTheme } from '../features/theme/themeSlice'
+import { useRevokeMutation } from '../features/auth/authApi'
+
+export function RootLayout() {
+  const dispatch = useAppDispatch()
+  const user = useAppSelector((state) => state.auth.user)
+  const [revoke] = useRevokeMutation()
+
+  return (
+    <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <header className="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">
+        <Link to="/" className="text-lg font-semibold">
+          RooftopGarden
+        </Link>
+        <nav className="flex items-center gap-4 text-sm">
+          {user ? (
+            <>
+              <Link to="/profile">{user.fullName}</Link>
+              <button type="button" onClick={() => revoke()} className="text-red-600">
+                Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Log in</Link>
+              <Link to="/register">Register</Link>
+            </>
+          )}
+          <button type="button" onClick={() => dispatch(toggleTheme())} aria-label="Toggle theme">
+            🌓
+          </button>
+        </nav>
+      </header>
+      <main>
+        <Outlet />
+      </main>
+    </div>
+  )
+}

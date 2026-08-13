@@ -13,6 +13,11 @@ const rawBaseQuery = fetchBaseQuery({
   },
 })
 
+const REFRESH_URL = '/api/auth/refresh'
+
+const isRefreshRequest = (args: string | FetchArgs) =>
+  (typeof args === 'string' ? args : args.url) === REFRESH_URL
+
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
@@ -20,10 +25,12 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 ) => {
   let result = await rawBaseQuery(args, api, extraOptions)
 
-  if (result.error?.status === 401) {
+  // Only attempt a recovery refresh for a 401 on some OTHER request — if the
+  // refresh call itself 401s (no/invalid cookie), retrying it would just 401 again.
+  if (result.error?.status === 401 && !isRefreshRequest(args)) {
     // No token to check client-side — the refresh token lives only in the httpOnly
     // cookie, which the browser attaches automatically. Just ask the server.
-    const refreshResult = await rawBaseQuery({ url: '/api/auth/refresh', method: 'POST' }, api, extraOptions)
+    const refreshResult = await rawBaseQuery({ url: REFRESH_URL, method: 'POST' }, api, extraOptions)
 
     if (refreshResult.data) {
       api.dispatch(setCredentials(refreshResult.data as AuthResponse))
