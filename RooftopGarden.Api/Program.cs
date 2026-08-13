@@ -10,9 +10,19 @@ using RooftopGarden.Application;
 using RooftopGarden.Infrastructure;
 using RooftopGarden.Infrastructure.Persistence.Seed;
 
+const string WebClientCorsPolicy = "WebClient";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(WebClientCorsPolicy, policy => policy
+        .WithOrigins("http://localhost:5173")
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+});
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -127,6 +137,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(WebClientCorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
