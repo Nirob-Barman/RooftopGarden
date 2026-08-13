@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,7 +37,7 @@ public static class IdentitySeeder
             EmailConfirmed = true
         };
 
-        var password = GenerateStrongPassword();
+        var password = "Admin@123";
         var result = await userManager.CreateAsync(admin, password);
 
         if (!result.Succeeded)
@@ -52,33 +51,7 @@ public static class IdentitySeeder
         await userManager.AddToRoleAsync(admin, Roles.Admin);
 
         logger.LogWarning(
-            "Seeded initial admin user {Email} with password: {Password} — change this after first login. " +
-            "This message only appears once and the password is not stored anywhere.",
-            AdminEmail,
-            password);
-    }
-
-    private static string GenerateStrongPassword()
-    {
-        const string upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-        const string lower = "abcdefghijkmnopqrstuvwxyz";
-        const string digits = "23456789";
-        const string all = upper + lower + digits;
-        const int length = 16;
-
-        var bytes = new byte[length];
-        RandomNumberGenerator.Fill(bytes);
-
-        var chars = new char[length];
-        for (var i = 0; i < length; i++)
-        {
-            chars[i] = all[bytes[i] % all.Length];
-        }
-
-        chars[0] = upper[bytes[0] % upper.Length];
-        chars[1] = lower[bytes[1] % lower.Length];
-        chars[2] = digits[bytes[2] % digits.Length];
-
-        return new string(chars);
+            "Seeded initial admin user {Email} with the default development password — change this before any non-local use.",
+            AdminEmail);
     }
 }
