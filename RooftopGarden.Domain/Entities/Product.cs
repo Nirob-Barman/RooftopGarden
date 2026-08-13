@@ -124,6 +124,17 @@ public class Product : BaseEntity
         UpdatedAt = DateTime.UtcNow;
     }
 
+    public void AdjustStockTo(int newQuantity)
+    {
+        if (newQuantity < 0)
+        {
+            throw new ArgumentException("Stock quantity cannot be negative.", nameof(newQuantity));
+        }
+
+        StockQuantity = newQuantity;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     private void SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))

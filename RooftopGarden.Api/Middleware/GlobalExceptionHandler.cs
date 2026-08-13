@@ -53,6 +53,11 @@ public class GlobalExceptionHandler : IExceptionHandler
             "Validation failed.",
             validationException.Errors.Select(e => e.ErrorMessage).ToList()),
 
+        BadRequestException badRequestException => (
+            HttpStatusCode.BadRequest,
+            badRequestException.Message,
+            Array.Empty<string>()),
+
         NotFoundException notFoundException => (
             HttpStatusCode.NotFound,
             notFoundException.Message,
