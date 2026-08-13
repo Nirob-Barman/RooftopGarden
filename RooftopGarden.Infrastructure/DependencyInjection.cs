@@ -6,6 +6,7 @@ using RooftopGarden.Application.Common.Interfaces;
 using RooftopGarden.Infrastructure.Authentication;
 using RooftopGarden.Infrastructure.Identity;
 using RooftopGarden.Infrastructure.Persistence;
+using RooftopGarden.Infrastructure.Services;
 
 namespace RooftopGarden.Infrastructure;
 
@@ -32,6 +33,9 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
     }
