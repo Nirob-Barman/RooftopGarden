@@ -28,6 +28,7 @@ Request flow: `Controller → MediatR (ISender) → Command/Query Handler → Ap
 - **Bookings** — book a service, cancel eligible bookings, admin approve/reject and filter by status
 - **Blog** — public read, admin create/update/delete (any admin, not author-scoped)
 - **Admin Dashboard** — customer/product/order/booking/service counts, orders/bookings broken down by status, revenue (paid payments only)
+- **Admin Customer Management** — search/list customer accounts, lock/unlock login access
 
 All `CLAUDE.md` backend features are now implemented.
 
