@@ -20,6 +20,7 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
     {
         var order = await _dbContext.Orders
             .Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+            .Include(o => o.Payment)
             .FirstOrDefaultAsync(o => o.Id == request.OrderId, cancellationToken)
             ?? throw new NotFoundException("Order", request.OrderId);
 
@@ -30,6 +31,12 @@ public class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatus
             foreach (var item in order.OrderItems)
             {
                 item.Product.IncreaseStock(item.Quantity);
+            }
+
+            if (order.Payment is { PaymentStatus: PaymentStatus.Paid })
+            {
+                order.Payment.Refund();
+                order.MarkPaymentStatus(PaymentStatus.Refunded);
             }
         }
 
