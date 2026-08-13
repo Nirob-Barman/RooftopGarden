@@ -23,8 +23,9 @@ Request flow: `Controller → MediatR (ISender) → Command/Query Handler → Ap
 - **Orders** — checkout from cart, order history/detail, cancellation, admin status management
 - **Payments** — simulated payment capture, automatic refund on order cancellation, admin-initiated refund
 - **Reviews** — purchase-verified reviews (rating 1-5), public read, admin moderation
+- **Wishlist** — add/remove products, no admin surface (purely customer-facing)
 
-Still to come: Wishlist, Rooftop Gardening Services, Bookings, Blog, Admin Dashboard.
+Still to come: Rooftop Gardening Services, Bookings, Blog, Admin Dashboard.
 
 A React (Vite + TypeScript) client lives alongside this API in `RooftopGarden.Web/` — see that folder for its own setup.
 
