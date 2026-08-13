@@ -31,6 +31,7 @@ export function RootLayout() {
               <Link to="/admin/categories">Admin: Categories</Link>
               <Link to="/admin/orders">Admin: Orders</Link>
               <Link to="/admin/payments">Admin: Payments</Link>
+              <Link to="/admin/reviews">Admin: Reviews</Link>
             </>
           )}
           {user ? (

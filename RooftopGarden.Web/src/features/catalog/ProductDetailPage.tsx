@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useGetProductByIdQuery } from './productsApi'
 import { AddToCartButton } from '../cart/components/AddToCartButton'
+import { ReviewList } from '../reviews/components/ReviewList'
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -45,6 +46,8 @@ export function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      <ReviewList productId={product.id} />
     </div>
   )
 }
