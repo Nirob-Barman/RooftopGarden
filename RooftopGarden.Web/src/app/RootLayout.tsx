@@ -22,6 +22,7 @@ export function RootLayout() {
             <>
               <Link to="/cart">Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}</Link>
               <Link to="/orders">Orders</Link>
+              <Link to="/payments">Payments</Link>
             </>
           )}
           {user?.role === 'Admin' && (
@@ -29,6 +30,7 @@ export function RootLayout() {
               <Link to="/admin/products">Admin: Products</Link>
               <Link to="/admin/categories">Admin: Categories</Link>
               <Link to="/admin/orders">Admin: Orders</Link>
+              <Link to="/admin/payments">Admin: Payments</Link>
             </>
           )}
           {user ? (

@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { useGetOrderByIdQuery, useCancelOrderMutation } from './ordersApi'
 import { canCancelOrder } from './enums'
+import { MakePaymentButton } from '../payments/components/MakePaymentButton'
 
 export function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -62,6 +63,10 @@ export function OrderDetailPage() {
         <span>Total</span>
         <span>${order.totalAmount.toFixed(2)}</span>
       </div>
+
+      {order.paymentStatus === 'Pending' && order.orderStatus !== 'Cancelled' && (
+        <MakePaymentButton orderId={order.id} />
+      )}
     </div>
   )
 }

@@ -39,6 +39,13 @@ const AdminOrderDetailPage = lazy(() =>
   import('../features/orders/admin/AdminOrderDetailPage').then((m) => ({ default: m.AdminOrderDetailPage })),
 )
 
+const PaymentHistoryPage = lazy(() =>
+  import('../features/payments/PaymentHistoryPage').then((m) => ({ default: m.PaymentHistoryPage })),
+)
+const AdminPaymentListPage = lazy(() =>
+  import('../features/payments/admin/AdminPaymentListPage').then((m) => ({ default: m.AdminPaymentListPage })),
+)
+
 function withSuspense(element: ReactNode) {
   return <Suspense fallback={<div className="p-6">Loading...</div>}>{element}</Suspense>
 }
@@ -60,6 +67,7 @@ export const router = createBrowserRouter([
           { path: '/checkout', element: withSuspense(<CheckoutPage />) },
           { path: '/orders', element: withSuspense(<OrderListPage />) },
           { path: '/orders/:id', element: withSuspense(<OrderDetailPage />) },
+          { path: '/payments', element: withSuspense(<PaymentHistoryPage />) },
         ],
       },
       {
@@ -71,6 +79,7 @@ export const router = createBrowserRouter([
           { path: '/admin/categories', element: withSuspense(<AdminCategoryList />) },
           { path: '/admin/orders', element: withSuspense(<AdminOrderListPage />) },
           { path: '/admin/orders/:id', element: withSuspense(<AdminOrderDetailPage />) },
+          { path: '/admin/payments', element: withSuspense(<AdminPaymentListPage />) },
         ],
       },
     ],
