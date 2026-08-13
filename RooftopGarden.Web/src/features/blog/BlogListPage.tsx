@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
 import { useGetBlogsQuery, useDeleteBlogMutation } from './blogApi'
+import { useConfirmDialog } from '../../components/useConfirmDialog'
 
 const PAGE_SIZE = 20
 
@@ -14,11 +15,12 @@ export function BlogListPage() {
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetBlogsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [deleteBlog] = useDeleteBlogMutation()
+  const { confirm, dialog } = useConfirmDialog()
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
-  const handleDelete = (id: number, title: string) => {
-    if (window.confirm(`Delete "${title}"? This cannot be undone.`)) {
+  const handleDelete = async (id: number, title: string) => {
+    if (await confirm({ title: 'Delete article', message: `Delete "${title}"? This cannot be undone.`, destructive: true })) {
       deleteBlog(id)
     }
   }
@@ -90,6 +92,7 @@ export function BlogListPage() {
           )}
         </>
       )}
+      {dialog}
     </div>
   )
 }

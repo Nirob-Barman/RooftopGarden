@@ -2,11 +2,25 @@ import { useParams, Link } from 'react-router-dom'
 import { useGetOrderByIdQuery, useCancelOrderMutation } from './ordersApi'
 import { canCancelOrder } from './enums'
 import { MakePaymentButton } from '../payments/components/MakePaymentButton'
+import { useConfirmDialog } from '../../components/useConfirmDialog'
 
 export function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data: order, isLoading, error } = useGetOrderByIdQuery(Number(id))
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation()
+  const { confirm, dialog } = useConfirmDialog()
+
+  const handleCancel = async () => {
+    if (!order) return
+    if (await confirm({
+      title: 'Cancel order',
+      message: `Cancel order #${order.id}? This cannot be undone.`,
+      confirmLabel: 'Cancel order',
+      destructive: true,
+    })) {
+      cancelOrder(order.id)
+    }
+  }
 
   if (isLoading) return <div className="p-6">Loading...</div>
   if (error || !order) return <div className="p-6">Order not found.</div>
@@ -23,7 +37,7 @@ export function OrderDetailPage() {
           <button
             type="button"
             disabled={isCancelling}
-            onClick={() => cancelOrder(order.id)}
+            onClick={handleCancel}
             className="rounded border border-red-600 px-3 py-1 text-sm text-red-600 disabled:opacity-40"
           >
             {isCancelling ? 'Cancelling...' : 'Cancel order'}
@@ -67,6 +81,7 @@ export function OrderDetailPage() {
       {order.paymentStatus === 'Pending' && order.orderStatus !== 'Cancelled' && (
         <MakePaymentButton orderId={order.id} />
       )}
+      {dialog}
     </div>
   )
 }

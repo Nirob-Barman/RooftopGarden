@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useGetBookingsQuery, useCancelBookingMutation } from './bookingsApi'
 import { canCancelBooking } from './enums'
+import { useConfirmDialog } from '../../components/useConfirmDialog'
 
 const PAGE_SIZE = 20
 
@@ -9,6 +10,18 @@ export function BookingListPage() {
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetBookingsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [cancelBooking, { isLoading: isCancelling }] = useCancelBookingMutation()
+  const { confirm, dialog } = useConfirmDialog()
+
+  const handleCancel = async (id: number, serviceName: string) => {
+    if (await confirm({
+      title: 'Cancel booking',
+      message: `Cancel your booking for "${serviceName}"?`,
+      confirmLabel: 'Cancel booking',
+      destructive: true,
+    })) {
+      cancelBooking(id)
+    }
+  }
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
@@ -44,7 +57,7 @@ export function BookingListPage() {
                   <button
                     type="button"
                     disabled={isCancelling}
-                    onClick={() => cancelBooking(booking.id)}
+                    onClick={() => handleCancel(booking.id, booking.serviceName)}
                     className="mt-2 text-sm text-error disabled:opacity-40"
                   >
                     Cancel booking
@@ -79,6 +92,7 @@ export function BookingListPage() {
           )}
         </>
       )}
+      {dialog}
     </div>
   )
 }

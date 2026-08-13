@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useGetCustomersQuery, useLockCustomerMutation, useUnlockCustomerMutation } from './customersApi'
+import { useConfirmDialog } from '../../components/useConfirmDialog'
 
 const PAGE_SIZE = 20
 
@@ -9,6 +10,18 @@ export function AdminCustomerListPage() {
   const { data, isLoading } = useGetCustomersQuery({ search: search || undefined, pageNumber, pageSize: PAGE_SIZE })
   const [lockCustomer, { isLoading: isLocking }] = useLockCustomerMutation()
   const [unlockCustomer, { isLoading: isUnlocking }] = useUnlockCustomerMutation()
+  const { confirm, dialog } = useConfirmDialog()
+
+  const handleLock = async (id: string, name: string) => {
+    if (await confirm({
+      title: 'Lock customer',
+      message: `Lock "${name}"'s account? They won't be able to log in until unlocked.`,
+      confirmLabel: 'Lock',
+      destructive: true,
+    })) {
+      lockCustomer(id)
+    }
+  }
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
@@ -68,7 +81,7 @@ export function AdminCustomerListPage() {
                       <button
                         type="button"
                         disabled={isLocking}
-                        onClick={() => lockCustomer(customer.id)}
+                        onClick={() => handleLock(customer.id, customer.fullName)}
                         className="text-error disabled:opacity-40"
                       >
                         Lock
@@ -105,6 +118,7 @@ export function AdminCustomerListPage() {
           )}
         </div>
       )}
+      {dialog}
     </div>
   )
 }

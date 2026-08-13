@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useGetAdminProductsQuery, useDeleteProductMutation } from '../productsApi'
+import { useConfirmDialog } from '../../../components/useConfirmDialog'
 
 const PAGE_SIZE = 20
 
@@ -8,11 +9,17 @@ export function AdminProductListPage() {
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetAdminProductsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [deleteProduct] = useDeleteProductMutation()
+  const { confirm, dialog } = useConfirmDialog()
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
-  const handleDelete = (id: number, name: string) => {
-    if (window.confirm(`Deactivate "${name}"? It will no longer be visible to customers.`)) {
+  const handleDelete = async (id: number, name: string) => {
+    if (await confirm({
+      title: 'Deactivate product',
+      message: `Deactivate "${name}"? It will no longer be visible to customers.`,
+      confirmLabel: 'Deactivate',
+      destructive: true,
+    })) {
       deleteProduct(id)
     }
   }
@@ -93,6 +100,7 @@ export function AdminProductListPage() {
           )}
         </div>
       )}
+      {dialog}
     </div>
   )
 }

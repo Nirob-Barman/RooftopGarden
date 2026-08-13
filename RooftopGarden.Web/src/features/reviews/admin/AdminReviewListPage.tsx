@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useGetReviewsQuery, useAdminDeleteReviewMutation } from '../reviewsApi'
+import { useConfirmDialog } from '../../../components/useConfirmDialog'
 
 const PAGE_SIZE = 20
 
@@ -7,11 +8,12 @@ export function AdminReviewListPage() {
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetReviewsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [adminDeleteReview] = useAdminDeleteReviewMutation()
+  const { confirm, dialog } = useConfirmDialog()
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
-  const handleDelete = (id: number) => {
-    if (window.confirm('Delete this review?')) {
+  const handleDelete = async (id: number) => {
+    if (await confirm({ title: 'Delete review', message: 'Delete this review?', destructive: true })) {
       adminDeleteReview(id)
     }
   }
@@ -72,6 +74,7 @@ export function AdminReviewListPage() {
           )}
         </>
       )}
+      {dialog}
     </div>
   )
 }

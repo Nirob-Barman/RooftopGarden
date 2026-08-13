@@ -9,6 +9,7 @@ import {
   useDeleteCategoryMutation,
   type CategoryDto,
 } from '../categoriesApi'
+import { useConfirmDialog } from '../../../components/useConfirmDialog'
 
 const categorySchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
@@ -23,6 +24,7 @@ export function AdminCategoryList() {
   const [updateCategory] = useUpdateCategoryMutation()
   const [deleteCategory] = useDeleteCategoryMutation()
   const [editingId, setEditingId] = useState<number | null>(null)
+  const { confirm, dialog } = useConfirmDialog()
 
   const {
     register,
@@ -52,8 +54,8 @@ export function AdminCategoryList() {
     reset({ name: '', description: '' })
   }
 
-  const handleDelete = (id: number, name: string) => {
-    if (window.confirm(`Delete category "${name}"?`)) {
+  const handleDelete = async (id: number, name: string) => {
+    if (await confirm({ title: 'Delete category', message: `Delete category "${name}"?`, destructive: true })) {
       deleteCategory(id)
     }
   }
@@ -114,6 +116,7 @@ export function AdminCategoryList() {
           ))}
         </ul>
       )}
+      {dialog}
     </div>
   )
 }

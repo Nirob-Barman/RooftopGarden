@@ -1,12 +1,25 @@
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
 import { useGetServicesQuery, useDeleteServiceMutation } from './gardeningServicesApi'
+import { useConfirmDialog } from '../../components/useConfirmDialog'
 
 export function ServiceListPage() {
   const user = useAppSelector((state) => state.auth.user)
   const isAdmin = user?.role === 'Admin'
   const { data, isLoading } = useGetServicesQuery({ pageSize: 50 })
   const [deleteService] = useDeleteServiceMutation()
+  const { confirm, dialog } = useConfirmDialog()
+
+  const handleDeactivate = async (id: number, name: string) => {
+    if (await confirm({
+      title: 'Deactivate service',
+      message: `Deactivate "${name}"? It will no longer be visible to customers.`,
+      confirmLabel: 'Deactivate',
+      destructive: true,
+    })) {
+      deleteService(id)
+    }
+  }
 
   return (
     <div className="p-6">
@@ -42,7 +55,11 @@ export function ServiceListPage() {
                     Edit
                   </Link>
                   {service.isActive && (
-                    <button type="button" onClick={() => deleteService(service.id)} className="text-red-600">
+                    <button
+                      type="button"
+                      onClick={() => handleDeactivate(service.id, service.name)}
+                      className="text-red-600"
+                    >
                       Deactivate
                     </button>
                   )}
@@ -52,6 +69,7 @@ export function ServiceListPage() {
           ))}
         </div>
       )}
+      {dialog}
     </div>
   )
 }

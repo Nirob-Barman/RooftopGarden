@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useGetAdminPaymentsQuery, useRefundPaymentMutation } from '../paymentsApi'
 import { PAYMENT_STATUSES } from '../enums'
+import { useConfirmDialog } from '../../../components/useConfirmDialog'
 
 const PAGE_SIZE = 20
 
@@ -14,6 +15,18 @@ export function AdminPaymentListPage() {
     pageSize: PAGE_SIZE,
   })
   const [refundPayment, { isLoading: isRefunding }] = useRefundPaymentMutation()
+  const { confirm, dialog } = useConfirmDialog()
+
+  const handleRefund = async (id: number, amount: number) => {
+    if (await confirm({
+      title: 'Refund payment',
+      message: `Refund $${amount.toFixed(2)}? This cannot be undone.`,
+      confirmLabel: 'Refund',
+      destructive: true,
+    })) {
+      refundPayment(id)
+    }
+  }
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
@@ -69,7 +82,7 @@ export function AdminPaymentListPage() {
                       <button
                         type="button"
                         disabled={isRefunding}
-                        onClick={() => refundPayment(payment.id)}
+                        onClick={() => handleRefund(payment.id, payment.amount)}
                         className="text-red-600 disabled:opacity-40"
                       >
                         Refund
@@ -106,6 +119,7 @@ export function AdminPaymentListPage() {
           )}
         </div>
       )}
+      {dialog}
     </div>
   )
 }
