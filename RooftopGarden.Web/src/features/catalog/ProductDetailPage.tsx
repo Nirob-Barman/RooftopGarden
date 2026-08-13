@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { useGetProductByIdQuery } from './productsApi'
+import { AddToCartButton } from '../cart/components/AddToCartButton'
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -39,6 +40,9 @@ export function ProductDetailPage() {
             </div>
           </dl>
           {product.description && <p className="mt-4 text-sm">{product.description}</p>}
+          <div className="mt-4">
+            <AddToCartButton productId={product.id} inStock={product.stockQuantity > 0} />
+          </div>
         </div>
       </div>
     </div>

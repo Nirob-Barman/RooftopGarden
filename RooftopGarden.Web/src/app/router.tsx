@@ -25,6 +25,8 @@ const AdminCategoryList = lazy(() =>
   import('../features/catalog/admin/AdminCategoryList').then((m) => ({ default: m.AdminCategoryList })),
 )
 
+const CartPage = lazy(() => import('../features/cart/CartPage').then((m) => ({ default: m.CartPage })))
+
 function withSuspense(element: ReactNode) {
   return <Suspense fallback={<div className="p-6">Loading...</div>}>{element}</Suspense>
 }
@@ -40,7 +42,10 @@ export const router = createBrowserRouter([
       { path: '/products/:id', element: withSuspense(<ProductDetailPage />) },
       {
         element: <ProtectedRoute />,
-        children: [{ path: '/profile', element: withSuspense(<ProfilePage />) }],
+        children: [
+          { path: '/profile', element: withSuspense(<ProfilePage />) },
+          { path: '/cart', element: withSuspense(<CartPage />) },
+        ],
       },
       {
         element: <AdminRoute />,

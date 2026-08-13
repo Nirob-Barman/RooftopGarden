@@ -2,11 +2,13 @@ import { Link, Outlet } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { toggleTheme } from '../features/theme/themeSlice'
 import { useRevokeMutation } from '../features/auth/authApi'
+import { useGetCartQuery } from '../features/cart/cartApi'
 
 export function RootLayout() {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.auth.user)
   const [revoke] = useRevokeMutation()
+  const { data: cart } = useGetCartQuery(undefined, { skip: user?.role !== 'Customer' })
 
   return (
     <div className="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
@@ -16,6 +18,9 @@ export function RootLayout() {
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           <Link to="/products">Products</Link>
+          {user?.role === 'Customer' && (
+            <Link to="/cart">Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}</Link>
+          )}
           {user?.role === 'Admin' && (
             <>
               <Link to="/admin/products">Admin: Products</Link>
