@@ -31,7 +31,9 @@ Request flow: `Controller → MediatR (ISender) → Command/Query Handler → Ap
 
 All `CLAUDE.md` backend features are now implemented.
 
-A React (Vite + TypeScript) client lives alongside this API in `RooftopGarden.Web/` — see that folder for its own setup.
+## Frontend
+
+A React (Vite + TypeScript) client lives alongside this API in `RooftopGarden.Web/`. Redux Toolkit + RTK Query for state/data-fetching, React Router, Tailwind CSS (green/earthy design system), React Hook Form + Zod for forms. Every backend feature above has a corresponding page — customer-facing browsing/checkout/booking flows plus the matching admin management screens. See `RooftopGarden.Web/` for its own setup.
 
 ## Running locally
 
