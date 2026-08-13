@@ -23,6 +23,7 @@ export function RootLayout() {
               <Link to="/cart">Cart{cart && cart.items.length > 0 ? ` (${cart.items.length})` : ''}</Link>
               <Link to="/orders">Orders</Link>
               <Link to="/payments">Payments</Link>
+              <Link to="/wishlist">Wishlist</Link>
             </>
           )}
           {user?.role === 'Admin' && (

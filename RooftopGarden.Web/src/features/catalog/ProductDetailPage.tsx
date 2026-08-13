@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useGetProductByIdQuery } from './productsApi'
 import { AddToCartButton } from '../cart/components/AddToCartButton'
 import { ReviewList } from '../reviews/components/ReviewList'
+import { WishlistToggleButton } from '../wishlist/components/WishlistToggleButton'
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -41,8 +42,9 @@ export function ProductDetailPage() {
             </div>
           </dl>
           {product.description && <p className="mt-4 text-sm">{product.description}</p>}
-          <div className="mt-4">
+          <div className="mt-4 flex items-center gap-4">
             <AddToCartButton productId={product.id} inStock={product.stockQuantity > 0} />
+            <WishlistToggleButton productId={product.id} />
           </div>
         </div>
       </div>
