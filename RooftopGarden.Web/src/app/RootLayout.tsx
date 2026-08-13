@@ -15,6 +15,13 @@ export function RootLayout() {
           RooftopGarden
         </Link>
         <nav className="flex items-center gap-4 text-sm">
+          <Link to="/products">Products</Link>
+          {user?.role === 'Admin' && (
+            <>
+              <Link to="/admin/products">Admin: Products</Link>
+              <Link to="/admin/categories">Admin: Categories</Link>
+            </>
+          )}
           {user ? (
             <>
               <Link to="/profile">{user.fullName}</Link>
