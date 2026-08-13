@@ -80,6 +80,8 @@ const AdminDashboardPage = lazy(() =>
   import('../features/dashboard/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage })),
 )
 
+const HomePage = lazy(() => import('../features/home/HomePage').then((m) => ({ default: m.HomePage })))
+
 function withSuspense(element: ReactNode) {
   return <Suspense fallback={<div className="p-6">Loading...</div>}>{element}</Suspense>
 }
@@ -88,7 +90,7 @@ export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-      { path: '/', element: <div className="p-6">Home</div> },
+      { path: '/', element: withSuspense(<HomePage />) },
       { path: '/login', element: withSuspense(<LoginPage />) },
       { path: '/register', element: withSuspense(<RegisterPage />) },
       { path: '/products', element: withSuspense(<ProductListPage />) },
