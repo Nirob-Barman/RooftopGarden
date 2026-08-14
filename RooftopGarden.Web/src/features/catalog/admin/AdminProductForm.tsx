@@ -10,6 +10,7 @@ import {
 } from '../productsApi'
 import { useGetCategoriesQuery } from '../categoriesApi'
 import { PLANT_TYPES, SUNLIGHT_REQUIREMENTS, WATER_REQUIREMENTS } from '../enums'
+import { Container, Input, Select, Textarea, Button } from '../../../components/ui'
 
 // Kept as strings (what the underlying <input>/<select> elements actually
 // produce) and converted to numbers only when building the API request —
@@ -89,151 +90,62 @@ export function AdminProductForm() {
   }
 
   return (
-    <div className="mx-auto max-w-lg p-6">
+    <Container size="md">
       <h1 className="mb-4 text-2xl font-semibold">{isEditing ? 'Edit product' : 'Create product'}</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium" htmlFor="name">
-            Name
-          </label>
-          <input
-            id="name"
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('name')}
-          />
-          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
-        </div>
+        <Input label="Name" {...register('name')} error={errors.name?.message} />
 
-        <div>
-          <label className="block text-sm font-medium" htmlFor="description">
-            Description
-          </label>
-          <textarea
-            id="description"
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('description')}
-          />
-          {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>}
-        </div>
+        <Textarea label="Description" {...register('description')} error={errors.description?.message} />
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium" htmlFor="price">
-              Price
-            </label>
-            <input
-              id="price"
-              type="number"
-              step="0.01"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-              {...register('price')}
-            />
-            {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium" htmlFor="stockQuantity">
-              Stock quantity
-            </label>
-            <input
-              id="stockQuantity"
-              type="number"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-              {...register('stockQuantity')}
-            />
-            {errors.stockQuantity && <p className="mt-1 text-sm text-red-600">{errors.stockQuantity.message}</p>}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium" htmlFor="imageUrl">
-            Image URL
-          </label>
-          <input
-            id="imageUrl"
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('imageUrl')}
+          <Input label="Price" type="number" step="0.01" {...register('price')} error={errors.price?.message} />
+          <Input
+            label="Stock quantity"
+            type="number"
+            {...register('stockQuantity')}
+            error={errors.stockQuantity?.message}
           />
-          {errors.imageUrl && <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>}
         </div>
 
-        <div>
-          <label className="block text-sm font-medium" htmlFor="categoryId">
-            Category
-          </label>
-          <select
-            id="categoryId"
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('categoryId')}
-          >
-            <option value="">Select a category</option>
-            {categories?.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-          {errors.categoryId && <p className="mt-1 text-sm text-red-600">{errors.categoryId.message}</p>}
-        </div>
+        <Input label="Image URL" {...register('imageUrl')} error={errors.imageUrl?.message} />
+
+        <Select label="Category" {...register('categoryId')} error={errors.categoryId?.message}>
+          <option value="">Select a category</option>
+          {categories?.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </Select>
 
         <div className="grid grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium" htmlFor="plantType">
-              Plant type
-            </label>
-            <select
-              id="plantType"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-              {...register('plantType')}
-            >
-              {PLANT_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium" htmlFor="sunlightRequirement">
-              Sunlight
-            </label>
-            <select
-              id="sunlightRequirement"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-              {...register('sunlightRequirement')}
-            >
-              {SUNLIGHT_REQUIREMENTS.map((req) => (
-                <option key={req} value={req}>
-                  {req}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium" htmlFor="waterRequirement">
-              Water
-            </label>
-            <select
-              id="waterRequirement"
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-              {...register('waterRequirement')}
-            >
-              {WATER_REQUIREMENTS.map((req) => (
-                <option key={req} value={req}>
-                  {req}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select label="Plant type" {...register('plantType')}>
+            {PLANT_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </Select>
+          <Select label="Sunlight" {...register('sunlightRequirement')}>
+            {SUNLIGHT_REQUIREMENTS.map((req) => (
+              <option key={req} value={req}>
+                {req}
+              </option>
+            ))}
+          </Select>
+          <Select label="Water" {...register('waterRequirement')}>
+            {WATER_REQUIREMENTS.map((req) => (
+              <option key={req} value={req}>
+                {req}
+              </option>
+            ))}
+          </Select>
         </div>
 
-        <button
-          type="submit"
-          disabled={isCreating || isUpdating}
-          className="w-full rounded bg-green-700 px-3 py-2 text-white disabled:opacity-50"
-        >
+        <Button type="submit" fullWidth isLoading={isCreating || isUpdating}>
           {isCreating || isUpdating ? 'Saving...' : 'Save product'}
-        </button>
+        </Button>
       </form>
-    </div>
+    </Container>
   )
 }

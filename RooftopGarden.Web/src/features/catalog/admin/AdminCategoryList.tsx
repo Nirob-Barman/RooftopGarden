@@ -10,6 +10,7 @@ import {
   type CategoryDto,
 } from '../categoriesApi'
 import { useConfirmDialog } from '../../../components/useConfirmDialog'
+import { Container, Card, Input, Button, Spinner } from '../../../components/ui'
 
 const categorySchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
@@ -61,62 +62,52 @@ export function AdminCategoryList() {
   }
 
   return (
-    <div className="mx-auto max-w-lg p-6">
+    <Container size="md">
       <h1 className="mb-4 text-2xl font-semibold">Manage categories</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mb-6 space-y-3 rounded border border-gray-200 p-4 dark:border-gray-700">
-        <h2 className="text-sm font-medium">{editingId ? 'Edit category' : 'New category'}</h2>
-        <div>
-          <input
-            placeholder="Name"
-            className="w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('name')}
-          />
-          {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
-        </div>
-        <div>
-          <input
-            placeholder="Description (optional)"
-            className="w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('description')}
-          />
-          {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>}
-        </div>
-        <div className="flex gap-2">
-          <button type="submit" disabled={isCreating} className="rounded bg-green-700 px-3 py-2 text-sm text-white">
-            {editingId ? 'Save changes' : 'Create'}
-          </button>
-          {editingId && (
-            <button type="button" onClick={cancelEditing} className="rounded border border-gray-300 px-3 py-2 text-sm dark:border-gray-600">
-              Cancel
-            </button>
-          )}
-        </div>
-      </form>
+      <Card className="mb-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+          <h2 className="text-sm font-medium text-foreground/70">{editingId ? 'Edit category' : 'New category'}</h2>
+          <Input placeholder="Name" {...register('name')} error={errors.name?.message} />
+          <Input placeholder="Description (optional)" {...register('description')} error={errors.description?.message} />
+          <div className="flex gap-2">
+            <Button type="submit" size="sm" isLoading={isCreating}>
+              {editingId ? 'Save changes' : 'Create'}
+            </Button>
+            {editingId && (
+              <Button type="button" variant="outline" size="sm" onClick={cancelEditing}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        </form>
+      </Card>
 
       {isLoading ? (
-        <p>Loading...</p>
+        <div className="flex justify-center py-12">
+          <Spinner />
+        </div>
       ) : (
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="space-y-3">
           {categories?.map((category) => (
-            <li key={category.id} className="flex items-center justify-between py-2">
+            <Card key={category.id} padding="sm" className="flex items-center justify-between">
               <div>
                 <p className="font-medium">{category.name}</p>
-                {category.description && <p className="text-sm text-gray-500">{category.description}</p>}
+                {category.description && <p className="text-sm text-foreground/60">{category.description}</p>}
               </div>
-              <div className="flex gap-3 text-sm">
-                <button type="button" onClick={() => startEditing(category)} className="text-green-700 underline">
+              <div className="flex gap-2">
+                <Button variant="ghost" size="sm" onClick={() => startEditing(category)}>
                   Edit
-                </button>
-                <button type="button" onClick={() => handleDelete(category.id, category.name)} className="text-red-600">
+                </Button>
+                <Button variant="danger" size="sm" onClick={() => handleDelete(category.id, category.name)}>
                   Delete
-                </button>
+                </Button>
               </div>
-            </li>
+            </Card>
           ))}
-        </ul>
+        </div>
       )}
       {dialog}
-    </div>
+    </Container>
   )
 }

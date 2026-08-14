@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useGetAdminProductsQuery, useDeleteProductMutation } from '../productsApi'
 import { useConfirmDialog } from '../../../components/useConfirmDialog'
+import { Container, LinkButton, Button, Table, StatusPill, Pagination, Spinner } from '../../../components/ui'
 
 const PAGE_SIZE = 20
 
@@ -14,93 +14,73 @@ export function AdminProductListPage() {
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
   const handleDelete = async (id: number, name: string) => {
-    if (await confirm({
-      title: 'Deactivate product',
-      message: `Deactivate "${name}"? It will no longer be visible to customers.`,
-      confirmLabel: 'Deactivate',
-      destructive: true,
-    })) {
+    if (
+      await confirm({
+        title: 'Deactivate product',
+        message: `Deactivate "${name}"? It will no longer be visible to customers.`,
+        confirmLabel: 'Deactivate',
+        destructive: true,
+      })
+    ) {
       deleteProduct(id)
     }
   }
 
   return (
-    <div className="p-6">
+    <Container size="lg">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Manage products</h1>
-        <Link to="/admin/products/new" className="rounded bg-green-700 px-3 py-2 text-sm text-white">
-          Create product
-        </Link>
+        <LinkButton to="/admin/products/new">Create product</LinkButton>
       </div>
 
       {isLoading ? (
-        <p>Loading...</p>
+        <div className="flex justify-center py-12">
+          <Spinner />
+        </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-gray-200 dark:border-gray-700">
-                <th className="py-2">Name</th>
-                <th className="py-2">Category</th>
-                <th className="py-2">Price</th>
-                <th className="py-2">Stock</th>
-                <th className="py-2">Active</th>
-                <th className="py-2"></th>
+        <div className="space-y-4">
+          <Table>
+            <Table.Head>
+              <tr>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell>Category</Table.HeaderCell>
+                <Table.HeaderCell>Price</Table.HeaderCell>
+                <Table.HeaderCell>Stock</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell></Table.HeaderCell>
               </tr>
-            </thead>
-            <tbody>
+            </Table.Head>
+            <Table.Body>
               {data?.items.map((product) => (
-                <tr key={product.id} className="border-b border-gray-100 dark:border-gray-800">
-                  <td className="py-2">{product.name}</td>
-                  <td className="py-2">{product.categoryName}</td>
-                  <td className="py-2">${product.price.toFixed(2)}</td>
-                  <td className="py-2">{product.stockQuantity}</td>
-                  <td className="py-2">{product.isActive ? 'Yes' : 'No'}</td>
-                  <td className="py-2 text-right">
-                    <Link to={`/admin/products/${product.id}/edit`} className="mr-3 text-green-700 underline">
-                      Edit
-                    </Link>
-                    {product.isActive && (
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(product.id, product.name)}
-                        className="text-red-600"
-                      >
-                        Deactivate
-                      </button>
-                    )}
-                  </td>
-                </tr>
+                <Table.Row key={product.id}>
+                  <Table.Cell>{product.name}</Table.Cell>
+                  <Table.Cell>{product.categoryName}</Table.Cell>
+                  <Table.Cell>${product.price.toFixed(2)}</Table.Cell>
+                  <Table.Cell>{product.stockQuantity}</Table.Cell>
+                  <Table.Cell>
+                    <StatusPill status={product.isActive ? 'Active' : 'Inactive'} />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex justify-end gap-2">
+                      <LinkButton to={`/admin/products/${product.id}/edit`} variant="ghost" size="sm">
+                        Edit
+                      </LinkButton>
+                      {product.isActive && (
+                        <Button variant="danger" size="sm" onClick={() => handleDelete(product.id, product.name)}>
+                          Deactivate
+                        </Button>
+                      )}
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
               ))}
-            </tbody>
-          </table>
+            </Table.Body>
+          </Table>
 
-          {totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <button
-                type="button"
-                disabled={pageNumber <= 1}
-                onClick={() => setPageNumber((p) => p - 1)}
-                className="rounded border border-gray-300 px-3 py-1 disabled:opacity-40 dark:border-gray-600"
-              >
-                Previous
-              </button>
-              <span className="text-sm">
-                Page {pageNumber} of {totalPages}
-              </span>
-              <button
-                type="button"
-                disabled={pageNumber >= totalPages}
-                onClick={() => setPageNumber((p) => p + 1)}
-                className="rounded border border-gray-300 px-3 py-1 disabled:opacity-40 dark:border-gray-600"
-              >
-                Next
-              </button>
-            </div>
-          )}
+          <Pagination page={pageNumber} totalPages={totalPages} onPageChange={setPageNumber} />
         </div>
       )}
       {dialog}
-    </div>
+    </Container>
   )
 }
