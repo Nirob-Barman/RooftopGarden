@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useGetAdminProductsQuery, useDeleteProductMutation } from '../productsApi'
+import { useGetAdminProductsQuery, useDeleteProductMutation, useActivateProductMutation } from '../productsApi'
 import { useConfirmDialog } from '../../../components/useConfirmDialog'
 import { Container, LinkButton, Button, Table, StatusPill, Pagination, Spinner } from '../../../components/ui'
 
@@ -9,11 +9,12 @@ export function AdminProductListPage() {
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetAdminProductsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [deleteProduct] = useDeleteProductMutation()
+  const [activateProduct] = useActivateProductMutation()
   const { confirm, dialog } = useConfirmDialog()
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / PAGE_SIZE)) : 1
 
-  const handleDelete = async (id: number, name: string) => {
+  const handleDeactivate = async (id: number, name: string) => {
     if (
       await confirm({
         title: 'Deactivate product',
@@ -23,6 +24,18 @@ export function AdminProductListPage() {
       })
     ) {
       deleteProduct(id)
+    }
+  }
+
+  const handleActivate = async (id: number, name: string) => {
+    if (
+      await confirm({
+        title: 'Activate product',
+        message: `Activate "${name}"? It will become visible and orderable by customers again.`,
+        confirmLabel: 'Activate',
+      })
+    ) {
+      activateProduct(id)
     }
   }
 
@@ -65,9 +78,13 @@ export function AdminProductListPage() {
                       <LinkButton to={`/admin/products/${product.id}/edit`} variant="ghost" size="sm">
                         Edit
                       </LinkButton>
-                      {product.isActive && (
-                        <Button variant="danger" size="sm" onClick={() => handleDelete(product.id, product.name)}>
+                      {product.isActive ? (
+                        <Button variant="danger" size="sm" onClick={() => handleDeactivate(product.id, product.name)}>
                           Deactivate
+                        </Button>
+                      ) : (
+                        <Button variant="primary" size="sm" onClick={() => handleActivate(product.id, product.name)}>
+                          Activate
                         </Button>
                       )}
                     </div>

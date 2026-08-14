@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RooftopGarden.Application.Common.Models;
+using RooftopGarden.Application.Features.Products.Commands.ActivateProduct;
 using RooftopGarden.Application.Features.Products.Commands.CreateProduct;
 using RooftopGarden.Application.Features.Products.Commands.DeleteProduct;
 using RooftopGarden.Application.Features.Products.Commands.UpdateProduct;
@@ -83,6 +84,13 @@ public class AdminProductsController : ControllerBase
     public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
     {
         await _sender.Send(new DeleteProductCommand(id), cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPost("{id:int}/activate")]
+    public async Task<IActionResult> ActivateProduct(int id, CancellationToken cancellationToken)
+    {
+        await _sender.Send(new ActivateProductCommand(id), cancellationToken);
         return NoContent();
     }
 }

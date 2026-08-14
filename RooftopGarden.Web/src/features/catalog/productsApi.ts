@@ -100,6 +100,13 @@ export const productsApi = apiSlice.injectEndpoints({
         { type: 'Product', id: 'LIST' },
       ],
     }),
+    activateProduct: builder.mutation<void, number>({
+      query: (id) => ({ url: `/api/admin/products/${id}/activate`, method: 'POST' }),
+      invalidatesTags: (_result, _error, id) => [
+        { type: 'Product', id },
+        { type: 'Product', id: 'LIST' },
+      ],
+    }),
   }),
 })
 
@@ -111,4 +118,5 @@ export const {
   useCreateProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useActivateProductMutation,
 } = productsApi
