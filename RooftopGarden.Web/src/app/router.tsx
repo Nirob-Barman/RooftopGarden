@@ -2,6 +2,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { lazy, Suspense, type ReactNode } from 'react'
 import { RootLayout } from './RootLayout'
+import { AdminLayout } from './AdminLayout'
 import { ProtectedRoute } from '../routes/ProtectedRoute'
 import { AdminRoute } from '../routes/AdminRoute'
 
@@ -120,26 +121,36 @@ export const router = createBrowserRouter([
       {
         element: <AdminRoute />,
         children: [
-          { path: '/admin/dashboard', element: withSuspense(<AdminDashboardPage />) },
-          { path: '/admin/customers', element: withSuspense(<AdminCustomerListPage />) },
-          { path: '/admin/products', element: withSuspense(<AdminProductListPage />) },
-          { path: '/admin/products/new', element: withSuspense(<AdminProductForm />) },
-          { path: '/admin/products/:id/edit', element: withSuspense(<AdminProductForm />) },
-          { path: '/admin/categories', element: withSuspense(<AdminCategoryList />) },
-          { path: '/admin/orders', element: withSuspense(<AdminOrderListPage />) },
-          { path: '/admin/orders/:id', element: withSuspense(<AdminOrderDetailPage />) },
-          { path: '/admin/payments', element: withSuspense(<AdminPaymentListPage />) },
-          { path: '/admin/reviews', element: withSuspense(<AdminReviewListPage />) },
-          { path: '/admin/bookings', element: withSuspense(<AdminBookingListPage />) },
+          {
+            element: <AdminLayout />,
+            children: [
+              { path: '/admin/dashboard', element: withSuspense(<AdminDashboardPage />) },
+              { path: '/admin/customers', element: withSuspense(<AdminCustomerListPage />) },
+              { path: '/admin/products', element: withSuspense(<AdminProductListPage />) },
+              { path: '/admin/products/new', element: withSuspense(<AdminProductForm />) },
+              { path: '/admin/products/:id/edit', element: withSuspense(<AdminProductForm />) },
+              { path: '/admin/categories', element: withSuspense(<AdminCategoryList />) },
+              { path: '/admin/orders', element: withSuspense(<AdminOrderListPage />) },
+              { path: '/admin/orders/:id', element: withSuspense(<AdminOrderDetailPage />) },
+              { path: '/admin/payments', element: withSuspense(<AdminPaymentListPage />) },
+              { path: '/admin/reviews', element: withSuspense(<AdminReviewListPage />) },
+              { path: '/admin/bookings', element: withSuspense(<AdminBookingListPage />) },
+            ],
+          },
         ],
       },
       {
         element: <AdminRoute />,
         children: [
-          { path: '/services/new', element: withSuspense(<AdminServiceForm />) },
-          { path: '/services/:id/edit', element: withSuspense(<AdminServiceForm />) },
-          { path: '/blog/new', element: withSuspense(<AdminBlogForm />) },
-          { path: '/blog/:id/edit', element: withSuspense(<AdminBlogForm />) },
+          {
+            element: <AdminLayout />,
+            children: [
+              { path: '/services/new', element: withSuspense(<AdminServiceForm />) },
+              { path: '/services/:id/edit', element: withSuspense(<AdminServiceForm />) },
+              { path: '/blog/new', element: withSuspense(<AdminBlogForm />) },
+              { path: '/blog/:id/edit', element: withSuspense(<AdminBlogForm />) },
+            ],
+          },
         ],
       },
     ],

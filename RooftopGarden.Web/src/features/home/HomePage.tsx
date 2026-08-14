@@ -6,7 +6,6 @@ import { WhyRooftopGardenSection } from './WhyRooftopGardenSection'
 import { TestimonialsSection } from './TestimonialsSection'
 import { BlogPreviewSection } from './BlogPreviewSection'
 import { CtaBannerSection } from './CtaBannerSection'
-import { Footer } from './Footer'
 import { LazySection } from '../../components/LazySection'
 
 export function HomePage() {
@@ -28,7 +27,6 @@ export function HomePage() {
         <BlogPreviewSection />
       </LazySection>
       <CtaBannerSection />
-      <Footer />
     </div>
   )
 }

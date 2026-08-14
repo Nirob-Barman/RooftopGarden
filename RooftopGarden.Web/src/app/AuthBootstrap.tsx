@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useRefreshMutation } from '../features/auth/authApi'
+import { Spinner } from '../components/ui/Spinner'
 
 // The access token lives only in memory (see authSlice), so a page reload loses
 // it. The refresh token cookie survives, so we silently try to trade it for a
@@ -17,7 +18,11 @@ export function AuthBootstrap({ children }: { children: ReactNode }) {
   }, [])
 
   if (!ready) {
-    return <div className="flex min-h-screen items-center justify-center">Loading...</div>
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Spinner className="h-8 w-8" />
+      </div>
+    )
   }
 
   return <>{children}</>
