@@ -18,6 +18,11 @@
   --color-error: #b3261e;
 
   --font-sans: Inter, 'Segoe UI', system-ui, sans-serif;
+
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 :root.dark {
@@ -26,6 +31,8 @@
   --color-foreground: #ecebe6;
   --color-primary: #52b788; /* deep forest green blends into dark backgrounds — use the brighter leaf green instead */
   --color-hero: #234d38; /* calmer, deeper green than the bright accent — distinct band, not jarring */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 body {
