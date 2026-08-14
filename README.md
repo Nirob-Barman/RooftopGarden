@@ -30,8 +30,6 @@ Request flow: `Controller → MediatR (ISender) → Command/Query Handler → Ap
 - **Admin Dashboard** — customer/product/order/booking/service counts, orders/bookings broken down by status, revenue (paid payments only)
 - **Admin Customer Management** — search/list customer accounts, lock/unlock login access
 
-All `CLAUDE.md` backend features are now implemented.
-
 ## Frontend
 
 A React (Vite + TypeScript) client lives alongside this API in `RooftopGarden.Web/`. Redux Toolkit + RTK Query for state/data-fetching, React Router, Tailwind CSS (green/earthy design system), React Hook Form + Zod for forms. Every backend feature above has a corresponding page — customer-facing browsing/checkout/booking flows plus the matching admin management screens. See `RooftopGarden.Web/` for its own setup.

@@ -7,6 +7,7 @@
 @theme {
   --color-primary: #1b4332; /* deep forest green */
   --color-primary-light: #2d6a4f;
+  --color-hero: #1b4332; /* full-bleed section bands (Hero/CTA) — theme-scoped independent of the accent color */
   --color-secondary: #52b788; /* fresh leaf green */
   --color-accent: #d97a4b; /* warm terracotta */
   --color-background: #faf7f2; /* soft cream */
@@ -24,6 +25,7 @@
   --color-surface: #24382c; /* noticeably lighter than background so cards read as elevated, not flat */
   --color-foreground: #ecebe6;
   --color-primary: #52b788; /* deep forest green blends into dark backgrounds — use the brighter leaf green instead */
+  --color-hero: #234d38; /* calmer, deeper green than the bright accent — distinct band, not jarring */
 }
 
 body {
