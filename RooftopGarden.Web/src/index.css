@@ -21,8 +21,9 @@
 
 :root.dark {
   --color-background: #14231c;
-  --color-surface: #1c2b23;
+  --color-surface: #24382c; /* noticeably lighter than background so cards read as elevated, not flat */
   --color-foreground: #ecebe6;
+  --color-primary: #52b788; /* deep forest green blends into dark backgrounds — use the brighter leaf green instead */
 }
 
 body {
