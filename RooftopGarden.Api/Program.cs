@@ -133,7 +133,13 @@ using (var scope = app.Services.CreateScope())
 app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+var swaggerEnabled = builder.Configuration.GetValue<bool>("Swagger:Enabled");
+if (swaggerEnabled)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
