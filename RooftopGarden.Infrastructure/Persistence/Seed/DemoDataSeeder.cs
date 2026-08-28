@@ -398,6 +398,66 @@ public static class DemoDataSeeder
             ("How Much Sunlight Does Your Rooftop Really Get?",
                 "Track sun exposure across a full day before choosing plants. South-facing rooftops in the " +
                 "northern hemisphere usually get full sun; shaded corners near walls or vents need shade-tolerant picks."),
+            ("Best Vegetables for Rooftop Container Gardening",
+            "Tomatoes, peppers, lettuce, spinach, radishes and beans are excellent choices for rooftop containers. " +
+            "Choose compact varieties, use containers with good drainage, and make sure each plant receives enough sunlight."),
+            ("How to Grow Tomatoes in Rooftop Containers",
+                "Tomatoes grow exceptionally well in containers when they receive plenty of sunlight and consistent watering. " +
+                "Use a deep container, nutrient-rich potting soil, and provide a stake or cage to support the plant as it grows."),
+            ("Growing Fresh Basil on Your Rooftop",
+                "Basil is one of the easiest herbs to grow in containers. Give it several hours of sunlight, keep the soil " +
+                "slightly moist, and harvest leaves regularly to encourage bushier growth throughout the season."),
+            ("How to Keep Rooftop Plants Healthy During Hot Weather",
+                "Rooftops can become much hotter than ground-level gardens. Use mulch, larger containers, regular watering, " +
+                "and light-colored pots to reduce heat stress and help plants survive periods of intense summer weather."),
+            ("5 Low-Maintenance Plants for Busy Gardeners",
+                "Succulents, snake plants, pothos, rosemary and marigolds are great choices for gardeners who cannot water " +
+                "their plants every day. Select plants according to your rooftop's sunlight and watering conditions."),
+            ("Why Drainage Matters in Rooftop Planters",
+                "Good drainage prevents water from collecting around plant roots and causing root rot. Always choose containers " +
+                "with drainage holes and use a well-draining potting mix designed for container gardening."),
+            ("A Simple Guide to Choosing Potting Soil",
+                "The right potting mix provides plants with drainage, air circulation and nutrients. Avoid using heavy garden " +
+                "soil alone in containers because it can become compacted and restrict healthy root development."),
+            ("How to Start Seeds in a Propagation Tray",
+                "Propagation trays make it easier to start vegetables, herbs and flowers indoors or in a protected rooftop area. " +
+                "Fill each cell with a lightweight growing medium, plant the seeds at the recommended depth, and maintain consistent moisture."),
+            ("When Should You Transplant Rooftop Seedlings?",
+                "Seedlings are usually ready for transplanting when they have developed several healthy leaves and strong roots. " +
+                "Harden them gradually by exposing them to outdoor conditions before moving them permanently into larger containers."),
+            ("The Benefits of Drip Irrigation for Rooftop Gardens",
+                "Drip irrigation delivers water directly to the root zone while reducing unnecessary evaporation. " +
+                "It is especially useful for rooftop gardens because it provides consistent watering and can reduce daily maintenance."),
+            ("How to Build a Small Herb Garden on Your Rooftop",
+                "A small collection of pots can provide fresh herbs throughout the growing season. Basil, mint, rosemary, " +
+                "chives and parsley are excellent choices for beginners and can be grown even in limited spaces."),
+            ("Rooftop Gardening for Beginners: Where to Start",
+                "Start small by choosing a sunny location, a few suitable containers and easy-to-grow plants. " +
+                "Focus on learning watering, sunlight and soil requirements before expanding your rooftop garden."),
+            ("How to Protect Plants From Strong Rooftop Winds",
+                "Strong winds can dry plants quickly and damage stems or containers. Place pots near stable structures, group containers " +
+                "together, use heavier planters, and provide supports for tall or delicate plants."),
+            ("Growing Flowers That Attract Pollinators",
+                "Marigolds, sunflowers and other flowering plants can bring bees and butterflies to your rooftop. " +
+                "Choose a variety of flowers with different blooming periods to provide pollinators with a consistent food source."),
+            ("How to Grow Sunflowers in Containers",
+                "Sunflowers can be grown successfully in large rooftop containers. Choose a sunny location, use a deep container, " +
+                "water consistently, and support taller varieties when necessary to protect them from strong winds."),
+            ("Composting for Rooftop Gardeners",
+                "Composting turns suitable kitchen and garden waste into valuable organic material for plants. " +
+                "A compact composting system can work well on rooftops when it is properly ventilated, balanced and maintained."),
+            ("Natural Ways to Reduce Garden Pests",
+                "Regularly inspect leaves, remove damaged plant material, maintain good airflow, and encourage beneficial insects. " +
+                "Healthy plants and clean growing spaces can reduce many common pest problems without relying heavily on chemical treatments."),
+            ("How to Create a Vertical Rooftop Garden",
+                "Vertical gardening allows you to grow more plants when floor space is limited. Use wall-mounted planters, hanging baskets " +
+                "or sturdy vertical structures and select plants that match the available sunlight and support system."),
+            ("Rainwater Harvesting for Rooftop Gardens",
+                "Collecting rainwater can provide an additional water source for garden plants while reducing dependence on treated water. " +
+                "Use clean collection containers and make sure stored water is protected from contamination and mosquitoes."),
+            ("Preparing Your Rooftop Garden for a New Season",
+                "Before starting a new growing season, clean containers, refresh old potting mix, inspect irrigation equipment, " +
+                "check plant supports, and plan crops according to sunlight, temperature and available rooftop space.")
         };
 
         var existingTitles = (await dbContext.Blogs.Select(b => b.Title).ToListAsync()).ToHashSet();
