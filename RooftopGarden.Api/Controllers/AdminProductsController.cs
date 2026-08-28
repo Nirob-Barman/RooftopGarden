@@ -1,6 +1,9 @@
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RooftopGarden.Api.Models.Products;
+using RooftopGarden.Application.Common.Interfaces;
 using RooftopGarden.Application.Common.Models;
 using RooftopGarden.Application.Features.Products.Commands.ActivateProduct;
 using RooftopGarden.Application.Features.Products.Commands.CreateProduct;
@@ -10,6 +13,7 @@ using RooftopGarden.Application.Features.Products.Dtos;
 using RooftopGarden.Application.Features.Products.Queries.GetProductById;
 using RooftopGarden.Application.Features.Products.Queries.GetProducts;
 using RooftopGarden.Domain.Constants;
+using RooftopGarden.Domain.Enums;
 
 namespace RooftopGarden.Api.Controllers;
 
@@ -52,8 +56,28 @@ public class AdminProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<ProductDto>> CreateProduct([FromBody] CreateProductCommand command, CancellationToken cancellationToken)
+    public async Task<ActionResult<ProductDto>> CreateProduct([FromForm] CreateProductRequest request, CancellationToken cancellationToken)
     {
+        ImageUploadRequest? image = null;
+        if (request.Image is not null)
+        {
+            image = new ImageUploadRequest(
+                request.Image.FileName,
+                request.Image.OpenReadStream(),
+                "rooftop-garden/products");
+        }
+
+        var command = new CreateProductCommand(
+            request.Name,
+            request.Description,
+            request.Price,
+            request.StockQuantity,
+            image,
+            request.CategoryId,
+            request.PlantType,
+            request.SunlightRequirement,
+            request.WaterRequirement);
+
         var result = await _sender.Send(command, cancellationToken);
         return CreatedAtAction(nameof(GetProductById), new { id = result.Id }, result);
     }
@@ -61,16 +85,26 @@ public class AdminProductsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult<ProductDto>> UpdateProduct(
         int id,
-        [FromBody] UpdateProductRequest request,
+        [FromForm] Models.Products.UpdateProductRequest request,
         CancellationToken cancellationToken)
     {
+        ImageUploadRequest? image = null;
+
+        if (request.Image is not null)
+        {
+            image = new ImageUploadRequest(
+                request.Image.FileName,
+                request.Image.OpenReadStream(),
+                "rooftop-garden/products");
+        }
+
         var command = new UpdateProductCommand(
             id,
             request.Name,
             request.Description,
             request.Price,
             request.StockQuantity,
-            request.ImageUrl,
+            image,
             request.CategoryId,
             request.PlantType,
             request.SunlightRequirement,

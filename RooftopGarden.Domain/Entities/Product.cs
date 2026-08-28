@@ -10,6 +10,7 @@ public class Product : BaseEntity
     public decimal Price { get; private set; }
     public int StockQuantity { get; private set; }
     public string? ImageUrl { get; private set; }
+    public string? CloudinaryPublicId { get; private set; }
 
     public int CategoryId { get; private set; }
     public Category Category { get; private set; } = null!;
@@ -69,8 +70,7 @@ public class Product : BaseEntity
         PlantType plantType,
         SunlightRequirement sunlightRequirement,
         WaterRequirement waterRequirement,
-        string? description,
-        string? imageUrl)
+        string? description)
     {
         SetName(name);
         SetPrice(price);
@@ -79,7 +79,35 @@ public class Product : BaseEntity
         SunlightRequirement = sunlightRequirement;
         WaterRequirement = waterRequirement;
         Description = description;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SetImage(string imageUrl, string publicId)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl))
+        {
+            throw new ArgumentException(
+                "Image URL cannot be empty.",
+                nameof(imageUrl));
+        }
+
+        if (string.IsNullOrWhiteSpace(publicId))
+        {
+            throw new ArgumentException(
+                "Cloudinary public ID cannot be empty.",
+                nameof(publicId));
+        }
+
         ImageUrl = imageUrl;
+        CloudinaryPublicId = publicId;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+
+    public void RemoveImage()
+    {
+        ImageUrl = null;
+        CloudinaryPublicId = null;
         UpdatedAt = DateTime.UtcNow;
     }
 

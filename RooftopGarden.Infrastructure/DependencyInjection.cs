@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RooftopGarden.Application.Common.Interfaces;
 using RooftopGarden.Infrastructure.Authentication;
 using RooftopGarden.Infrastructure.Identity;
+using RooftopGarden.Infrastructure.Images;
 using RooftopGarden.Infrastructure.Persistence;
 using RooftopGarden.Infrastructure.Services;
 
@@ -36,6 +37,9 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+        services.Configure<CloudinaryOptions>(configuration.GetSection(CloudinaryOptions.SectionName));
+        services.AddScoped<IImageStorage, CloudinaryImageStorage>();
 
         return services;
     }

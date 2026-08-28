@@ -1,4 +1,5 @@
 using MediatR;
+using RooftopGarden.Application.Common.Interfaces;
 using RooftopGarden.Application.Features.Products.Dtos;
 using RooftopGarden.Domain.Enums;
 
@@ -10,7 +11,7 @@ public record UpdateProductCommand(
     string? Description,
     decimal Price,
     int StockQuantity,
-    string? ImageUrl,
+    ImageUploadRequest? Image,
     int CategoryId,
     PlantType PlantType,
     SunlightRequirement SunlightRequirement,

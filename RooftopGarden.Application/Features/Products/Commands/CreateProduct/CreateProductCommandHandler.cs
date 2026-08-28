@@ -10,10 +10,13 @@ namespace RooftopGarden.Application.Features.Products.Commands.CreateProduct;
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductDto>
 {
     private readonly IApplicationDbContext _dbContext;
+    private readonly IImageStorage _imageStorage;
 
-    public CreateProductCommandHandler(IApplicationDbContext dbContext)
+    public CreateProductCommandHandler(IApplicationDbContext dbContext, IImageStorage imageStorage)
     {
         _dbContext = dbContext;
+        _imageStorage = imageStorage;
+
     }
 
     public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -29,8 +32,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             request.PlantType,
             request.SunlightRequirement,
             request.WaterRequirement,
-            request.Description,
-            request.ImageUrl);
+            request.Description);
+
+        if (request.Image is not null)
+        {
+            var storedImage = await _imageStorage.UploadAsync(request.Image,cancellationToken);
+            product.SetImage(storedImage.Url, storedImage.PublicId);            
+        }
 
         _dbContext.Products.Add(product);
         await _dbContext.SaveChangesAsync(cancellationToken);

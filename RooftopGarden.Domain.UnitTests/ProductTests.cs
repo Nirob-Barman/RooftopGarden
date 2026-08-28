@@ -25,8 +25,7 @@ namespace RooftopGarden.Domain.UnitTests
                 plantType,
                 sunlightRequirement,
                 waterRequirement,
-                description,
-                imageUrl);
+                description);
         }
 
         [Fact]
@@ -121,8 +120,7 @@ namespace RooftopGarden.Domain.UnitTests
                 default,
                 default,
                 default,
-                "Updated description",
-                "updated.jpg");
+                "Updated description");
 
             // Assert
             product.Name.Should().Be("Updated Rose");

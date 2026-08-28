@@ -82,12 +82,12 @@ export const productsApi = apiSlice.injectEndpoints({
       query: (id) => `/api/admin/products/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Product', id }],
     }),
-    createProduct: builder.mutation<ProductDto, ProductWriteRequest>({
-      query: (body) => ({ url: '/api/admin/products', method: 'POST', body }),
+    createProduct: builder.mutation<ProductDto, FormData>({
+      query: (formData) => ({ url: '/api/admin/products', method: 'POST', body: formData }),
       invalidatesTags: [{ type: 'Product', id: 'LIST' }],
     }),
-    updateProduct: builder.mutation<ProductDto, { id: number } & ProductWriteRequest>({
-      query: ({ id, ...body }) => ({ url: `/api/admin/products/${id}`, method: 'PUT', body }),
+    updateProduct: builder.mutation<ProductDto, { id: number; formData: FormData }>({
+      query: ({ id, formData }) => ({ url: `/api/admin/products/${id}`, method: 'PUT', body: formData }),
       invalidatesTags: (_result, _error, { id }) => [
         { type: 'Product', id },
         { type: 'Product', id: 'LIST' },
