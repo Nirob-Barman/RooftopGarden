@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RooftopGarden.Domain", "RooftopGarden.Domain\RooftopGarden.Domain.csproj", "{3011C85B-791D-4BCE-A3E8-95CAEE443279}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RooftopGarden.Infrastructure", "RooftopGarden.Infrastructure\RooftopGarden.Infrastructure.csproj", "{CC903721-D590-40B3-9775-938F8E9A0C0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RooftopGarden.Api", "RooftopGarden.Api\RooftopGarden.Api.csproj", "{AFF0C0B1-B2BE-41EC-B132-497C16E73C60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RooftopGarden.Domain.UnitTests", "RooftopGarden.Domain.UnitTests\RooftopGarden.Domain.UnitTests.csproj", "{038FC8A7-4B6F-4C9C-9888-BA92036540DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{AFF0C0B1-B2BE-41EC-B132-497C16E73C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFF0C0B1-B2BE-41EC-B132-497C16E73C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFF0C0B1-B2BE-41EC-B132-497C16E73C60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038FC8A7-4B6F-4C9C-9888-BA92036540DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038FC8A7-4B6F-4C9C-9888-BA92036540DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038FC8A7-4B6F-4C9C-9888-BA92036540DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038FC8A7-4B6F-4C9C-9888-BA92036540DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
