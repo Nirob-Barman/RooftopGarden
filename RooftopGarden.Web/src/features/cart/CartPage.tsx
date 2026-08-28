@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useGetCartQuery } from './cartApi'
 import { CartItemRow } from './components/CartItemRow'
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 export function CartPage() {
+  usePageTitle("Cart");
   const { data: cart, isLoading } = useGetCartQuery()
 
   if (isLoading) return <div className="p-6">Loading...</div>

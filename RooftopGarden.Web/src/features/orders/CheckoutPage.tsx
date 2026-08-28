@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useGetCartQuery } from '../cart/cartApi'
 import { usePlaceOrderMutation } from './ordersApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const checkoutSchema = z.object({
   shippingAddress: z.string().min(1, 'Shipping address is required').max(500),
@@ -12,6 +13,7 @@ const checkoutSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutSchema>
 
 export function CheckoutPage() {
+  usePageTitle("Checkout");
   const { data: cart, isLoading } = useGetCartQuery()
   const [placeOrder, { isLoading: isPlacing, error }] = usePlaceOrderMutation()
   const navigate = useNavigate()

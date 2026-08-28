@@ -11,6 +11,7 @@ import {
 } from '../categoriesApi'
 import { useConfirmDialog } from '../../../components/useConfirmDialog'
 import { Container, Card, Input, Button, Spinner } from '../../../components/ui'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 const categorySchema = z.object({
   name: z.string().min(1, 'Name is required').max(100),
@@ -20,6 +21,7 @@ const categorySchema = z.object({
 type CategoryFormValues = z.infer<typeof categorySchema>
 
 export function AdminCategoryList() {
+  usePageTitle("Manage Categories")
   const { data: categories, isLoading } = useGetCategoriesQuery()
   const [createCategory, { isLoading: isCreating }] = useCreateCategoryMutation()
   const [updateCategory] = useUpdateCategoryMutation()

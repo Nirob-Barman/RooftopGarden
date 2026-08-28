@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
 import { useGetBlogsQuery, useDeleteBlogMutation } from './blogApi'
 import { useConfirmDialog } from '../../components/useConfirmDialog'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
@@ -11,6 +12,7 @@ function excerpt(content: string, length = 160) {
 }
 
 export function BlogListPage() {
+  usePageTitle("Blog");
   const isAdmin = useAppSelector((state) => state.auth.user?.role === 'Admin')
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetBlogsQuery({ pageNumber, pageSize: PAGE_SIZE })

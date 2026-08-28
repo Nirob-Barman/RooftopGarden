@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useRegisterMutation } from './authApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const registerSchema = z.object({
   fullName: z.string().min(1, 'Full name is required').max(200),
@@ -18,6 +19,7 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>
 
 export function RegisterPage() {
+  usePageTitle("Register");
   const [registerUser, { isLoading, error }] = useRegisterMutation()
   const navigate = useNavigate()
   const {

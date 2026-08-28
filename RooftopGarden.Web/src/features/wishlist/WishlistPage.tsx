@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useGetWishlistQuery, useRemoveWishlistItemMutation } from './wishlistApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export function WishlistPage() {
+  usePageTitle("Wishlist")
   const { data, isLoading } = useGetWishlistQuery({ pageSize: 100 })
   const [removeWishlistItem] = useRemoveWishlistItemMutation()
 

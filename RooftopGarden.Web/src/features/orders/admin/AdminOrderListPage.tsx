@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useGetAdminOrdersQuery } from '../ordersApi'
 import { ORDER_STATUSES } from '../enums'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function AdminOrderListPage() {
+  usePageTitle("Manage Orders")
   const [pageNumber, setPageNumber] = useState(1)
   const [status, setStatus] = useState('')
   const { data, isLoading } = useGetAdminOrdersQuery({

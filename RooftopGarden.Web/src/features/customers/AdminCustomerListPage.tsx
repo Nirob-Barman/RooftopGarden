@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useGetCustomersQuery, useLockCustomerMutation, useUnlockCustomerMutation } from './customersApi'
 import { useConfirmDialog } from '../../components/useConfirmDialog'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function AdminCustomerListPage() {
+  usePageTitle('Manage Customers')
   const [search, setSearch] = useState('')
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetCustomersQuery({ search: search || undefined, pageNumber, pageSize: PAGE_SIZE })

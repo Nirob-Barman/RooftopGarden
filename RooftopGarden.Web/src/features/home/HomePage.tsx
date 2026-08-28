@@ -7,8 +7,10 @@ import { TestimonialsSection } from './TestimonialsSection'
 import { BlogPreviewSection } from './BlogPreviewSection'
 import { CtaBannerSection } from './CtaBannerSection'
 import { LazySection } from '../../components/LazySection'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export function HomePage() {
+  usePageTitle("Home");
   return (
     <div>
       <HeroSection />

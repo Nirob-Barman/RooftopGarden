@@ -1,7 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
 import { useGetBlogByIdQuery } from './blogApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export function BlogPostPage() {
+  usePageTitle('Blog Post')
   const { id } = useParams<{ id: string }>()
   const { data: post, isLoading, error } = useGetBlogByIdQuery(Number(id))
 

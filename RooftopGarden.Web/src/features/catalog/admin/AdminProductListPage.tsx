@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { useGetAdminProductsQuery, useDeleteProductMutation, useActivateProductMutation } from '../productsApi'
 import { useConfirmDialog } from '../../../components/useConfirmDialog'
 import { Container, LinkButton, Button, Table, StatusPill, Pagination, Spinner } from '../../../components/ui'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function AdminProductListPage() {
+  usePageTitle("Manage Products")
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetAdminProductsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [deleteProduct] = useDeleteProductMutation()

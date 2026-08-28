@@ -11,6 +11,7 @@ import {
 import { useGetCategoriesQuery } from '../categoriesApi'
 import { PLANT_TYPES, SUNLIGHT_REQUIREMENTS, WATER_REQUIREMENTS } from '../enums'
 import { Container, Input, Select, Textarea, Button } from '../../../components/ui'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 // Kept as strings (what the underlying <input>/<select> elements actually
 // produce) and converted to numbers only when building the API request —
@@ -38,6 +39,7 @@ type ProductFormValues = z.infer<typeof productSchema>
 export function AdminProductForm() {
   const { id } = useParams<{ id: string }>()
   const isEditing = Boolean(id)
+  usePageTitle(isEditing ? "Edit Product" : "Add Product")
   const navigate = useNavigate()
 
   const { data: categories } = useGetCategoriesQuery()

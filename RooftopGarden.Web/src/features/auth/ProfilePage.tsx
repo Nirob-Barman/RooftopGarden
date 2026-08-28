@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useGetProfileQuery, useUpdateProfileMutation } from './authApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const profileSchema = z.object({
   fullName: z.string().min(1, 'Full name is required').max(200),
@@ -18,6 +19,7 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>
 
 export function ProfilePage() {
+  usePageTitle("Profile")
   const { data: profile, isLoading } = useGetProfileQuery()
   const [updateProfile, { isLoading: isSaving, isSuccess }] = useUpdateProfileMutation()
 

@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useGetAdminOrderByIdQuery, useUpdateOrderStatusMutation } from '../ordersApi'
 import { ORDER_STATUSES } from '../enums'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 export function AdminOrderDetailPage() {
+  usePageTitle("Order Details")
   const { id } = useParams<{ id: string }>()
   const { data: order, isLoading, error } = useGetAdminOrderByIdQuery(Number(id))
   const [updateStatus, { isLoading: isUpdating, error: updateError }] = useUpdateOrderStatusMutation()

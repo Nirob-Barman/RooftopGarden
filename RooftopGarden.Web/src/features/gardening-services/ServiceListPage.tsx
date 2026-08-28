@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
 import { useGetServicesQuery, useDeleteServiceMutation } from './gardeningServicesApi'
 import { useConfirmDialog } from '../../components/useConfirmDialog'
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 export function ServiceListPage() {
+  usePageTitle("Services");
   const user = useAppSelector((state) => state.auth.user)
   const isAdmin = user?.role === 'Admin'
   const { data, isLoading } = useGetServicesQuery({ pageSize: 50 })

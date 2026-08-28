@@ -3,8 +3,10 @@ import { useGetOrderByIdQuery, useCancelOrderMutation } from './ordersApi'
 import { canCancelOrder } from './enums'
 import { MakePaymentButton } from '../payments/components/MakePaymentButton'
 import { useConfirmDialog } from '../../components/useConfirmDialog'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export function OrderDetailPage() {
+  usePageTitle("Order Details")
   const { id } = useParams<{ id: string }>()
   const { data: order, isLoading, error } = useGetOrderByIdQuery(Number(id))
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation()

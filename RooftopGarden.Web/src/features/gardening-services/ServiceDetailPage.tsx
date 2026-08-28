@@ -1,8 +1,10 @@
 import { useParams, Link } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
 import { useGetServiceByIdQuery } from './gardeningServicesApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export function ServiceDetailPage() {
+  usePageTitle("Service Details")
   const { id } = useParams<{ id: string }>()
   const user = useAppSelector((state) => state.auth.user)
   const { data: service, isLoading, error } = useGetServiceByIdQuery(Number(id))

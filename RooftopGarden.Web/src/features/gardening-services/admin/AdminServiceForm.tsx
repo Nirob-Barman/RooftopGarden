@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCreateServiceMutation, useUpdateServiceMutation, useGetServiceByIdQuery } from '../gardeningServicesApi'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 // Duration kept as the raw "HH:MM:SS" string the API expects (TimeSpan serializes
 // as a string) — validated with a regex rather than split into separate number inputs.
@@ -25,6 +26,7 @@ type ServiceFormValues = z.infer<typeof serviceSchema>
 export function AdminServiceForm() {
   const { id } = useParams<{ id: string }>()
   const isEditing = Boolean(id)
+  usePageTitle(isEditing ? 'Edit Service' : 'Add Service')
   const navigate = useNavigate()
 
   const { data: existingService } = useGetServiceByIdQuery(Number(id), { skip: !isEditing })

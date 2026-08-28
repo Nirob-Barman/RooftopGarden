@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom'
 import { useGetAdminPaymentsQuery, useRefundPaymentMutation } from '../paymentsApi'
 import { PAYMENT_STATUSES } from '../enums'
 import { useConfirmDialog } from '../../../components/useConfirmDialog'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function AdminPaymentListPage() {
+  usePageTitle('Manage Payments')
   const [pageNumber, setPageNumber] = useState(1)
   const [status, setStatus] = useState('')
   const { data, isLoading } = useGetAdminPaymentsQuery({

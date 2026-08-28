@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useGetAdminBookingsQuery, useApproveBookingMutation, useRejectBookingMutation } from '../bookingsApi'
 import { BOOKING_STATUSES } from '../enums'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function AdminBookingListPage() {
+  usePageTitle("Manage Bookings")
   const [pageNumber, setPageNumber] = useState(1)
   const [status, setStatus] = useState('')
   const { data, isLoading } = useGetAdminBookingsQuery({ status: status || undefined, pageNumber, pageSize: PAGE_SIZE })

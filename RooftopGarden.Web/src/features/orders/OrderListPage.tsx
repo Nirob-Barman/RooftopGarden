@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useGetOrdersQuery } from './ordersApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function OrderListPage() {
+  usePageTitle("Orders")
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetOrdersQuery({ pageNumber, pageSize: PAGE_SIZE })
 

@@ -1,8 +1,10 @@
 import { useAppSelector } from '../../../app/hooks'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 import { useGetReviewsQuery, useDeleteReviewMutation } from '../reviewsApi'
 import { ReviewForm } from './ReviewForm'
 
 export function ReviewList({ productId }: { productId: number }) {
+  usePageTitle('Product Details')
   const user = useAppSelector((state) => state.auth.user)
   const { data, isLoading } = useGetReviewsQuery({ productId, pageSize: 50 })
   const [deleteReview] = useDeleteReviewMutation()

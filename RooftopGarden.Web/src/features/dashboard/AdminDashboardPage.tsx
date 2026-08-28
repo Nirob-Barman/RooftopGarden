@@ -1,3 +1,4 @@
+import { usePageTitle } from '../../hooks/usePageTitle';
 import { useGetDashboardStatsQuery } from './dashboardApi'
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
@@ -41,6 +42,7 @@ function StatusBreakdown({ title, byStatus }: { title: string; byStatus: Record<
 }
 
 export function AdminDashboardPage() {
+  usePageTitle("Admin Dashboard")
   const { data: stats, isLoading } = useGetDashboardStatsQuery()
 
   if (isLoading) return <div className="p-6">Loading...</div>

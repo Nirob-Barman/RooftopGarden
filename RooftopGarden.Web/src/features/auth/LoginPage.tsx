@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
 import { useLoginMutation } from './authApi'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const loginSchema = z.object({
   email: z.string().email('Enter a valid email address'),
@@ -12,6 +13,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>
 
 export function LoginPage() {
+  usePageTitle("Login");
   const [login, { isLoading, error }] = useLoginMutation()
   const navigate = useNavigate()
   const {

@@ -3,8 +3,10 @@ import { useGetProductByIdQuery } from './productsApi'
 import { AddToCartButton } from '../cart/components/AddToCartButton'
 import { ReviewList } from '../reviews/components/ReviewList'
 import { WishlistToggleButton } from '../wishlist/components/WishlistToggleButton'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export function ProductDetailPage() {
+  usePageTitle("Product Details")
   const { id } = useParams<{ id: string }>()
   const { data: product, isLoading, error } = useGetProductByIdQuery(Number(id))
 

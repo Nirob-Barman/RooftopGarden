@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useGetReviewsQuery, useAdminDeleteReviewMutation } from '../reviewsApi'
 import { useConfirmDialog } from '../../../components/useConfirmDialog'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function AdminReviewListPage() {
+  usePageTitle("Manage Reviews")
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetReviewsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [adminDeleteReview] = useAdminDeleteReviewMutation()

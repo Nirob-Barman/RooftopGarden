@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useCreateBlogMutation, useUpdateBlogMutation, useGetBlogByIdQuery } from '../blogApi'
+import { usePageTitle } from '../../../hooks/usePageTitle'
 
 const blogSchema = z.object({
   title: z.string().min(1, 'Title is required').max(300),
@@ -16,6 +17,7 @@ type BlogFormValues = z.infer<typeof blogSchema>
 export function AdminBlogForm() {
   const { id } = useParams<{ id: string }>()
   const isEditing = Boolean(id)
+  usePageTitle(isEditing ? 'Edit Blog Post' : 'Create Blog Post')
   const navigate = useNavigate()
 
   const { data: existingPost } = useGetBlogByIdQuery(Number(id), { skip: !isEditing })

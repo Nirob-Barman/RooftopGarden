@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom'
 import { useGetBookingsQuery, useCancelBookingMutation } from './bookingsApi'
 import { canCancelBooking } from './enums'
 import { useConfirmDialog } from '../../components/useConfirmDialog'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function BookingListPage() {
+  usePageTitle("Bookings")
   const [pageNumber, setPageNumber] = useState(1)
   const { data, isLoading } = useGetBookingsQuery({ pageNumber, pageSize: PAGE_SIZE })
   const [cancelBooking, { isLoading: isCancelling }] = useCancelBookingMutation()

@@ -2,10 +2,12 @@ import { useSearchParams } from 'react-router-dom'
 import { useGetProductsQuery, type ProductFilterParams } from './productsApi'
 import { useGetCategoriesQuery } from './categoriesApi'
 import { ProductCard } from './components/ProductCard'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const PAGE_SIZE = 20
 
 export function ProductListPage() {
+  usePageTitle("Products");
   const [searchParams, setSearchParams] = useSearchParams()
 
   const filter: ProductFilterParams = {
