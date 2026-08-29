@@ -64,7 +64,7 @@ public class AdminProductsController : ControllerBase
             image = new ImageUploadRequest(
                 request.Image.FileName,
                 request.Image.OpenReadStream(),
-                "rooftop-garden/products");
+                ImageStorageFolder.Product);
         }
 
         var command = new CreateProductCommand(
@@ -95,7 +95,7 @@ public class AdminProductsController : ControllerBase
             image = new ImageUploadRequest(
                 request.Image.FileName,
                 request.Image.OpenReadStream(),
-                "rooftop-garden/products");
+                ImageStorageFolder.Product);
         }
 
         var command = new UpdateProductCommand(

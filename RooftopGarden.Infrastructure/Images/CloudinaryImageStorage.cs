@@ -35,8 +35,8 @@ namespace RooftopGarden.Infrastructure.Images
         {
             var uploadParams = new ImageUploadParams
             {
-                File = new FileDescription(request.FileName, request.Content),
-                Folder = request.Folder,
+                File = new FileDescription(request.FileName, request.Content),                
+                Folder = GetFolder(request),
                 UseFilename = true,
                 UniqueFilename = true,
                 Overwrite = false
@@ -77,6 +77,20 @@ namespace RooftopGarden.Infrastructure.Images
 
                 throw new ImageStorageException("Image deletion failed.");
             }
+        }
+
+        private static string GetFolder(ImageUploadRequest request)
+        {
+            return request.Folder switch
+            {
+                ImageStorageFolder.Product =>
+                    $"rooftop-garden/products",
+                ImageStorageFolder.Blog =>
+                    $"rooftop-garden/blogs",
+                ImageStorageFolder.Avatar => 
+                    $"rooftop-garden/avatars",
+                _ => throw new ArgumentOutOfRangeException(nameof(request.Folder))
+            };
         }
     }
 }

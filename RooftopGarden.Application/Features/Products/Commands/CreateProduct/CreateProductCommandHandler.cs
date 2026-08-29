@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RooftopGarden.Application.Common.Exceptions;
 using RooftopGarden.Application.Common.Interfaces;
 using RooftopGarden.Application.Features.Products.Dtos;
@@ -11,12 +12,13 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IImageStorage _imageStorage;
+    private readonly ILogger<CreateProductCommandHandler> _logger;
 
-    public CreateProductCommandHandler(IApplicationDbContext dbContext, IImageStorage imageStorage)
+    public CreateProductCommandHandler(IApplicationDbContext dbContext, IImageStorage imageStorage, ILogger<CreateProductCommandHandler> logger)
     {
         _dbContext = dbContext;
         _imageStorage = imageStorage;
-
+        _logger = logger;
     }
 
     public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -34,15 +36,37 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
             request.WaterRequirement,
             request.Description);
 
-        if (request.Image is not null)
+        string? uploadedPublicId = null;
+
+        try
         {
-            var storedImage = await _imageStorage.UploadAsync(request.Image,cancellationToken);
-            product.SetImage(storedImage.Url, storedImage.PublicId);            
+            if (request.Image is not null)
+            {
+                var storedImage = await _imageStorage.UploadAsync(request.Image,cancellationToken);
+                uploadedPublicId = storedImage.PublicId;
+                product.SetImage(storedImage.Url, storedImage.PublicId);
+            }
+
+            _dbContext.Products.Add(product);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return product.ToDto(category.Name);
         }
-
-        _dbContext.Products.Add(product);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        return product.ToDto(category.Name);
+        catch
+        {
+            // Database failed after Cloudinary upload
+            if (!string.IsNullOrWhiteSpace(uploadedPublicId))
+            {
+                try
+                {
+                    await _imageStorage.DeleteAsync(uploadedPublicId, CancellationToken.None);
+                }
+                catch(Exception cleanupException)
+                {
+                    _logger.LogError(cleanupException, "Failed to clean up Cloudinary image {PublicId} after product creation failed.", uploadedPublicId);
+                }
+            }
+            throw;
+        }
     }
 }

@@ -7,7 +7,14 @@ namespace RooftopGarden.Application.Common.Interfaces
         Task DeleteAsync(string publicId, CancellationToken cancellationToken);
     }
 
-    public sealed record ImageUploadRequest(string FileName, Stream Content,string Folder);
+    public sealed record ImageUploadRequest(string FileName, Stream Content, ImageStorageFolder Folder);
 
     public sealed record StoredImage(string Url, string PublicId);
+
+    public enum ImageStorageFolder
+    {
+        Product,
+        Blog,
+        Avatar
+    }
 }
