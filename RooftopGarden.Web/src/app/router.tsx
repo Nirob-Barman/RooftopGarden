@@ -5,6 +5,7 @@ import { RootLayout } from './RootLayout'
 import { AdminLayout } from './AdminLayout'
 import { ProtectedRoute } from '../routes/ProtectedRoute'
 import { AdminRoute } from '../routes/AdminRoute'
+import { NotFoundPage } from '../features/not-found/NotFoundPage'
 
 const LoginPage = lazy(() => import('../features/auth/LoginPage').then((m) => ({ default: m.LoginPage })))
 const RegisterPage = lazy(() => import('../features/auth/RegisterPage').then((m) => ({ default: m.RegisterPage })))
@@ -95,27 +96,27 @@ export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-      { path: '/', element: withSuspense(<HomePage />) },
-      { path: '/login', element: withSuspense(<LoginPage />) },
-      { path: '/register', element: withSuspense(<RegisterPage />) },
-      { path: '/products', element: withSuspense(<ProductListPage />) },
-      { path: '/products/:id', element: withSuspense(<ProductDetailPage />) },
-      { path: '/services', element: withSuspense(<ServiceListPage />) },
-      { path: '/services/:id', element: withSuspense(<ServiceDetailPage />) },
-      { path: '/blog', element: withSuspense(<BlogListPage />) },
-      { path: '/blog/:id', element: withSuspense(<BlogPostPage />) },
+      { path: "/", element: withSuspense(<HomePage />) },
+      { path: "/login", element: withSuspense(<LoginPage />) },
+      { path: "/register", element: withSuspense(<RegisterPage />) },
+      { path: "/products", element: withSuspense(<ProductListPage />) },
+      { path: "/products/:id", element: withSuspense(<ProductDetailPage />) },
+      { path: "/services", element: withSuspense(<ServiceListPage />) },
+      { path: "/services/:id", element: withSuspense(<ServiceDetailPage />) },
+      { path: "/blog", element: withSuspense(<BlogListPage />) },
+      { path: "/blog/:id", element: withSuspense(<BlogPostPage />) },
       {
         element: <ProtectedRoute />,
         children: [
-          { path: '/profile', element: withSuspense(<ProfilePage />) },
-          { path: '/cart', element: withSuspense(<CartPage />) },
-          { path: '/checkout', element: withSuspense(<CheckoutPage />) },
-          { path: '/orders', element: withSuspense(<OrderListPage />) },
-          { path: '/orders/:id', element: withSuspense(<OrderDetailPage />) },
-          { path: '/payments', element: withSuspense(<PaymentHistoryPage />) },
-          { path: '/wishlist', element: withSuspense(<WishlistPage />) },
-          { path: '/bookings', element: withSuspense(<BookingListPage />) },
-          { path: '/bookings/new', element: withSuspense(<BookingForm />) },
+          { path: "/profile", element: withSuspense(<ProfilePage />) },
+          { path: "/cart", element: withSuspense(<CartPage />) },
+          { path: "/checkout", element: withSuspense(<CheckoutPage />) },
+          { path: "/orders", element: withSuspense(<OrderListPage />) },
+          { path: "/orders/:id", element: withSuspense(<OrderDetailPage />) },
+          { path: "/payments", element: withSuspense(<PaymentHistoryPage />) },
+          { path: "/wishlist", element: withSuspense(<WishlistPage />) },
+          { path: "/bookings", element: withSuspense(<BookingListPage />) },
+          { path: "/bookings/new", element: withSuspense(<BookingForm />) },
         ],
       },
       {
@@ -124,17 +125,50 @@ export const router = createBrowserRouter([
           {
             element: <AdminLayout />,
             children: [
-              { path: '/admin/dashboard', element: withSuspense(<AdminDashboardPage />) },
-              { path: '/admin/customers', element: withSuspense(<AdminCustomerListPage />) },
-              { path: '/admin/products', element: withSuspense(<AdminProductListPage />) },
-              { path: '/admin/products/new', element: withSuspense(<AdminProductForm />) },
-              { path: '/admin/products/:id/edit', element: withSuspense(<AdminProductForm />) },
-              { path: '/admin/categories', element: withSuspense(<AdminCategoryList />) },
-              { path: '/admin/orders', element: withSuspense(<AdminOrderListPage />) },
-              { path: '/admin/orders/:id', element: withSuspense(<AdminOrderDetailPage />) },
-              { path: '/admin/payments', element: withSuspense(<AdminPaymentListPage />) },
-              { path: '/admin/reviews', element: withSuspense(<AdminReviewListPage />) },
-              { path: '/admin/bookings', element: withSuspense(<AdminBookingListPage />) },
+              {
+                path: "/admin/dashboard",
+                element: withSuspense(<AdminDashboardPage />),
+              },
+              {
+                path: "/admin/customers",
+                element: withSuspense(<AdminCustomerListPage />),
+              },
+              {
+                path: "/admin/products",
+                element: withSuspense(<AdminProductListPage />),
+              },
+              {
+                path: "/admin/products/new",
+                element: withSuspense(<AdminProductForm />),
+              },
+              {
+                path: "/admin/products/:id/edit",
+                element: withSuspense(<AdminProductForm />),
+              },
+              {
+                path: "/admin/categories",
+                element: withSuspense(<AdminCategoryList />),
+              },
+              {
+                path: "/admin/orders",
+                element: withSuspense(<AdminOrderListPage />),
+              },
+              {
+                path: "/admin/orders/:id",
+                element: withSuspense(<AdminOrderDetailPage />),
+              },
+              {
+                path: "/admin/payments",
+                element: withSuspense(<AdminPaymentListPage />),
+              },
+              {
+                path: "/admin/reviews",
+                element: withSuspense(<AdminReviewListPage />),
+              },
+              {
+                path: "/admin/bookings",
+                element: withSuspense(<AdminBookingListPage />),
+              },
             ],
           },
         ],
@@ -145,14 +179,24 @@ export const router = createBrowserRouter([
           {
             element: <AdminLayout />,
             children: [
-              { path: '/services/new', element: withSuspense(<AdminServiceForm />) },
-              { path: '/services/:id/edit', element: withSuspense(<AdminServiceForm />) },
-              { path: '/blog/new', element: withSuspense(<AdminBlogForm />) },
-              { path: '/blog/:id/edit', element: withSuspense(<AdminBlogForm />) },
+              {
+                path: "/services/new",
+                element: withSuspense(<AdminServiceForm />),
+              },
+              {
+                path: "/services/:id/edit",
+                element: withSuspense(<AdminServiceForm />),
+              },
+              { path: "/blog/new", element: withSuspense(<AdminBlogForm />) },
+              {
+                path: "/blog/:id/edit",
+                element: withSuspense(<AdminBlogForm />),
+              },
             ],
           },
         ],
       },
+      { path: "*", element: withSuspense(<NotFoundPage />) },
     ],
   },
-])
+]);
