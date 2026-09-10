@@ -320,5 +320,28 @@ namespace RooftopGarden.Domain.UnitTests
                 .Throw<ArgumentException>()
                 .WithMessage("Stock quantity cannot be negative.*");
         }
+
+        [Fact]
+        public void UpdateDetails_WithNegativePrice_ThrowsArgumentException()
+        {
+            // Arrange
+            var product = CreateProduct(price: 100m);
+
+            // Act
+            var action = () => product.UpdateDetails(
+                "Updated Rose",
+                -50m,
+                1,
+                default,
+                default,
+                default,
+                "Updated description");
+
+            // Assert
+            action.Should()
+                .Throw<ArgumentException>()
+                .WithMessage("Price cannot be negative.*");
+        }
+
     }
 }
