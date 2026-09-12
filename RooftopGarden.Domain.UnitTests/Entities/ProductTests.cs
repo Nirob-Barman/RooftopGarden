@@ -2,7 +2,7 @@
 using RooftopGarden.Domain.Entities;
 using RooftopGarden.Domain.Enums;
 
-namespace RooftopGarden.Domain.UnitTests
+namespace RooftopGarden.Domain.UnitTests.Entities
 {
     public class ProductTests
     {
@@ -14,8 +14,7 @@ namespace RooftopGarden.Domain.UnitTests
             PlantType plantType = default,
             SunlightRequirement sunlightRequirement = default,
             WaterRequirement waterRequirement = default,
-            string? description = null,
-            string? imageUrl = null)
+            string? description = null)
         {
             return new Product(
                 name,
@@ -40,8 +39,7 @@ namespace RooftopGarden.Domain.UnitTests
                 price: 100m,
                 stockQuantity: 10,
                 categoryId: 2,
-                description: "Beautiful rose",
-                imageUrl: "rose.jpg");
+                description: "Beautiful rose");
 
             var after = DateTime.UtcNow;
 
@@ -50,8 +48,7 @@ namespace RooftopGarden.Domain.UnitTests
             product.Price.Should().Be(100m);
             product.StockQuantity.Should().Be(10);
             product.CategoryId.Should().Be(2);
-            product.Description.Should().Be("Beautiful rose");
-            product.ImageUrl.Should().Be("rose.jpg");
+            product.Description.Should().Be("Beautiful rose");            
             product.IsActive.Should().BeTrue();
             product.CreatedAt.Should().BeOnOrAfter(before);
             product.CreatedAt.Should().BeOnOrBefore(after);
@@ -127,7 +124,6 @@ namespace RooftopGarden.Domain.UnitTests
             product.Price.Should().Be(150m);
             product.CategoryId.Should().Be(3);
             product.Description.Should().Be("Updated description");
-            product.ImageUrl.Should().Be("updated.jpg");
             product.UpdatedAt.Should().NotBeNull();
         }
 

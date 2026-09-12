@@ -3,7 +3,7 @@ using FluentAssertions;
 using RooftopGarden.Domain.Entities;
 using RooftopGarden.Domain.Enums;
 
-namespace RooftopGarden.Domain.UnitTests
+namespace RooftopGarden.Domain.UnitTests.Entities
 {
     public class BookingTests
     {

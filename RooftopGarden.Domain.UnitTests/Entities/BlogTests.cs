@@ -2,7 +2,7 @@
 using FluentAssertions;
 using RooftopGarden.Domain.Entities;
 
-namespace RooftopGarden.Domain.UnitTests
+namespace RooftopGarden.Domain.UnitTests.Entities
 {
     public class BlogTests
     {
