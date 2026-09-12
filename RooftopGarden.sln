@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RooftopGarden.Api", "Roofto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RooftopGarden.Domain.UnitTests", "RooftopGarden.Domain.UnitTests\RooftopGarden.Domain.UnitTests.csproj", "{038FC8A7-4B6F-4C9C-9888-BA92036540DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RooftopGarden.Application.UnitTests", "RooftopGarden.Application.UnitTests\RooftopGarden.Application.UnitTests.csproj", "{8392D332-BB96-403F-ACF1-9F36EFA5550C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{038FC8A7-4B6F-4C9C-9888-BA92036540DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{038FC8A7-4B6F-4C9C-9888-BA92036540DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{038FC8A7-4B6F-4C9C-9888-BA92036540DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8392D332-BB96-403F-ACF1-9F36EFA5550C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8392D332-BB96-403F-ACF1-9F36EFA5550C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8392D332-BB96-403F-ACF1-9F36EFA5550C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8392D332-BB96-403F-ACF1-9F36EFA5550C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
