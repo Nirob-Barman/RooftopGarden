@@ -16,24 +16,80 @@ const registerSchema = z.object({
     .or(z.literal('')),
 })
 
+
 type RegisterFormValues = z.infer<typeof registerSchema>
+type RegisterApiResponse = {
+  success?: boolean
+  message?: string
+  errors?: string[]
+};
+
 
 export function RegisterPage() {
   usePageTitle("Register");
-  const [registerUser, { isLoading, error }] = useRegisterMutation()
+  const [registerUser, { isLoading }] = useRegisterMutation()
   const navigate = useNavigate()
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<RegisterFormValues>({ resolver: zodResolver(registerSchema) })
 
   const onSubmit = async (values: RegisterFormValues) => {
     try {
-      await registerUser({ ...values, phoneNumber: values.phoneNumber || undefined }).unwrap()
-      navigate('/')
-    } catch {
-      // surfaced via `error` below
+      await registerUser({
+        ...values,
+        phoneNumber: values.phoneNumber || undefined,
+      }).unwrap();
+      navigate("/");
+    } catch (err: unknown) {
+      const data = (err as { data?: RegisterApiResponse }).data;
+      const apiErrors = data?.errors;
+
+      // No useful error information from the API
+      if (!Array.isArray(apiErrors) || apiErrors.length === 0) {
+        setError("root", {
+          type: "server",
+          message:
+            data?.message ||
+            "Could not create the account. Please try again.",
+        });
+        return;
+      }
+
+      // Password errors
+      const passwordErrors = apiErrors.filter((message) =>
+        message.toLowerCase().includes("password"),
+      );
+
+      if (passwordErrors.length > 0) {
+        setError("password", {
+          type: "server",
+          message: passwordErrors.join(" "),
+        });
+      }
+
+      // Email errors
+      const emailErrors = apiErrors.filter((message) =>
+        message.toLowerCase().includes("email"),
+      );
+
+      if (emailErrors.length > 0) {
+        setError("email", {
+          type: "server",
+          message: emailErrors.join(" "),
+        });
+      }
+
+      // If the API returned an error that isn't
+      // related to password or email
+      if (passwordErrors.length === 0 && emailErrors.length === 0) {
+        setError("root", {
+          type: "server",
+          message: apiErrors.join(" "),
+        });
+      }
     }
   }
 
@@ -48,9 +104,13 @@ export function RegisterPage() {
           <input
             id="fullName"
             className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('fullName')}
+            {...register("fullName")}
           />
-          {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName.message}</p>}
+          {errors.fullName && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.fullName.message}
+            </p>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium" htmlFor="email">
@@ -60,9 +120,11 @@ export function RegisterPage() {
             id="email"
             type="email"
             className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('email')}
+            {...register("email")}
           />
-          {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium" htmlFor="password">
@@ -72,9 +134,13 @@ export function RegisterPage() {
             id="password"
             type="password"
             className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('password')}
+            {...register("password")}
           />
-          {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.password.message}
+            </p>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium" htmlFor="phoneNumber">
@@ -83,27 +149,32 @@ export function RegisterPage() {
           <input
             id="phoneNumber"
             className="mt-1 w-full rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
-            {...register('phoneNumber')}
+            {...register("phoneNumber")}
           />
-          {errors.phoneNumber && <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>}
+          {errors.phoneNumber && (
+            <p className="mt-1 text-sm text-red-600">
+              {errors.phoneNumber.message}
+            </p>
+          )}
         </div>
-        {error && (
-          <p className="text-sm text-red-600">Could not create the account. The email may already be in use.</p>
+        {/* General API Error */}
+        {errors.root?.message && (
+          <p className="text-sm text-red-600">{errors.root.message}</p>
         )}
         <button
           type="submit"
           disabled={isLoading}
           className="w-full rounded bg-green-700 px-3 py-2 text-white disabled:opacity-50"
         >
-          {isLoading ? 'Creating account...' : 'Create account'}
+          {isLoading ? "Creating account..." : "Create account"}
         </button>
       </form>
       <p className="mt-4 text-sm">
-        Already have an account?{' '}
+        Already have an account?{" "}
         <Link className="text-green-700 underline" to="/login">
           Log in
         </Link>
       </p>
     </div>
-  )
+  );
 }
