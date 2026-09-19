@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RooftopGarden.Application.Features.Auth.Commands.GoogleLogin;
 using RooftopGarden.Application.Features.Auth.Commands.Login;
 using RooftopGarden.Application.Features.Auth.Commands.RefreshToken;
 using RooftopGarden.Application.Features.Auth.Commands.Register;
@@ -38,6 +39,13 @@ public class AuthController : ControllerBase
     {
         var result = await _sender.Send(command, cancellationToken);
         AppendRefreshTokenCookie(result);
+        return Ok(result);
+    }
+
+    [HttpPost("google")]
+    public async Task<ActionResult<AuthResponseDto>> GoogleLogin([FromBody] GoogleLoginRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _sender.Send(new GoogleLoginCommand(request.Credential), cancellationToken);
         return Ok(result);
     }
 

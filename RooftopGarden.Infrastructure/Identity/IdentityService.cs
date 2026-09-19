@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using RooftopGarden.Application.Common.Interfaces;
 using RooftopGarden.Application.Common.Models;
+using RooftopGarden.Application.Common.Models.GoogleLogin;
 using RooftopGarden.Application.Common.Models.Identity;
 using RooftopGarden.Domain.Constants;
 
@@ -55,6 +56,73 @@ public class IdentityService : IIdentityService
 
         return new AuthenticatedUser(user.Id, user.Email!, user.FullName, role);
     }
+
+    public async Task<AuthenticatedUser?> GetOrCreateGoogleUserAsync(GoogleUserInfo googleUser, CancellationToken cancellationToken = default)
+    {
+        const string loginProvider = "Google";
+        var user = await _userManager.FindByLoginAsync(loginProvider, googleUser.GoogleId);
+
+        if (user is not null)
+        {
+            return await ToAuthenticatedUserAsync(user);
+        }
+
+        user = await _userManager.FindByEmailAsync(googleUser.Email);
+
+        if (user is null)
+        {
+            user = new ApplicationUser
+            {
+                UserName = googleUser.Email,
+                Email = googleUser.Email,
+                FullName = googleUser.FullName ?? googleUser.Email,
+                EmailConfirmed = true,
+                ProfileImageUrl = googleUser.Picture
+            };
+
+            var createResult = await _userManager.CreateAsync(user);
+
+            if (!createResult.Succeeded)
+            {
+                return null;
+            }
+
+            var roleResult = await _userManager.AddToRoleAsync(user, Roles.Customer);
+
+            if (!roleResult.Succeeded)
+            {
+                return null;
+            }
+        }
+        //else
+        //{
+        //    // Keep the existing user's profile image updated from Google
+        //    // only when Google provides one.
+        //    if (!string.IsNullOrWhiteSpace(googleUser.Picture) && user.ProfileImageUrl != googleUser.Picture)
+        //    {
+        //        user.ProfileImageUrl = googleUser.Picture;
+
+        //        var updateResult = await _userManager.UpdateAsync(user);
+
+        //        if (!updateResult.Succeeded)
+        //        {
+        //            return null;
+        //        }
+        //    }
+        //}
+
+        var loginInfo = new UserLoginInfo(loginProvider, googleUser.GoogleId, loginProvider);
+        //Link the Google account using AddLoginAsync.
+        var loginResult = await _userManager.AddLoginAsync(user, loginInfo);
+
+        if (!loginResult.Succeeded)
+        {
+            return null;
+        }
+
+        return await ToAuthenticatedUserAsync(user);
+    }
+
 
     public async Task<UserProfile?> GetProfileAsync(string userId)
     {
@@ -145,5 +213,16 @@ public class IdentityService : IIdentityService
     {
         var isLockedOut = await _userManager.IsLockedOutAsync(user);
         return new CustomerAccount(user.Id, user.Email!, user.FullName, user.PhoneNumber, user.Address, isLockedOut);
+    }
+
+    private async Task<AuthenticatedUser> ToAuthenticatedUserAsync(ApplicationUser user)
+    {
+        var role = (await _userManager.GetRolesAsync(user)) .FirstOrDefault() ?? Roles.Customer;
+
+        return new AuthenticatedUser(
+            user.Id,
+            user.Email!,
+            user.FullName,
+            role);
     }
 }
