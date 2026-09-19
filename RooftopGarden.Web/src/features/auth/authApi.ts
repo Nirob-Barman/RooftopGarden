@@ -13,6 +13,10 @@ export interface LoginRequest {
   password: string
 }
 
+export interface GoogleLoginRequest {
+  credential: string
+}
+
 export interface ProfileDto {
   email: string
   fullName: string
@@ -40,6 +44,17 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     login: builder.mutation<AuthResponse, LoginRequest>({
       query: (body) => ({ url: '/api/auth/login', method: 'POST', body }),
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        const { data } = await queryFulfilled
+        dispatch(setCredentials(data))
+      },
+    }),
+    googleLogin: builder.mutation<AuthResponse, GoogleLoginRequest>({
+      query: (body) => ({
+        url: '/api/auth/google',
+        method: 'POST',
+        body,
+      }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         const { data } = await queryFulfilled
         dispatch(setCredentials(data))
@@ -79,6 +94,7 @@ export const authApi = apiSlice.injectEndpoints({
 export const {
   useRegisterMutation,
   useLoginMutation,
+  useGoogleLoginMutation,
   useRefreshMutation,
   useRevokeMutation,
   useGetProfileQuery,
