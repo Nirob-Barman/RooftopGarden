@@ -3,12 +3,37 @@ import { useGetProductsQuery, type ProductFilterParams } from './productsApi'
 import { useGetCategoriesQuery } from './categoriesApi'
 import { ProductCard } from './components/ProductCard'
 import { usePageTitle } from '../../hooks/usePageTitle'
+import { useEffect, useState } from 'react'
+import { useDebounce } from '../../hooks/useDebounce'
 
 const PAGE_SIZE = 20
 
 export function ProductListPage() {
   usePageTitle("Products");
   const [searchParams, setSearchParams] = useSearchParams()
+  const [searchInput, setSearchInput] = useState(
+    () => searchParams.get("search") ?? "",
+  );
+
+  const debouncedSearch = useDebounce(searchInput, 500);
+
+  useEffect(() => {
+    const currentSearch = searchParams.get("search") ?? "";
+    const nextSearch = debouncedSearch.trim();
+
+    if (nextSearch === currentSearch) return;
+
+    const next = new URLSearchParams(searchParams);
+
+    if (nextSearch) {
+      next.set("search", nextSearch);
+    } else {
+      next.delete("search");
+    }
+
+    next.delete("page");
+    setSearchParams(next, { replace: true });
+  }, [debouncedSearch, searchParams, setSearchParams]);
 
   const filter: ProductFilterParams = {
     search: searchParams.get('search') || undefined,
@@ -47,13 +72,13 @@ export function ProductListPage() {
         <input
           type="search"
           placeholder="Search products..."
-          defaultValue={filter.search ?? ''}
-          onChange={(e) => updateParam('search', e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
         />
         <select
-          value={filter.categoryId ?? ''}
-          onChange={(e) => updateParam('categoryId', e.target.value)}
+          value={filter.categoryId ?? ""}
+          onChange={(e) => updateParam("categoryId", e.target.value)}
           className="rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
         >
           <option value="">All categories</option>
@@ -66,22 +91,24 @@ export function ProductListPage() {
         <input
           type="number"
           placeholder="Min price"
-          defaultValue={filter.minPrice ?? ''}
-          onChange={(e) => updateParam('minPrice', e.target.value)}
+          defaultValue={filter.minPrice ?? ""}
+          onChange={(e) => updateParam("minPrice", e.target.value)}
           className="w-28 rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
         />
         <input
           type="number"
           placeholder="Max price"
-          defaultValue={filter.maxPrice ?? ''}
-          onChange={(e) => updateParam('maxPrice', e.target.value)}
+          defaultValue={filter.maxPrice ?? ""}
+          onChange={(e) => updateParam("maxPrice", e.target.value)}
           className="w-28 rounded border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800"
         />
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
             checked={filter.inStockOnly ?? false}
-            onChange={(e) => updateParam('inStockOnly', e.target.checked ? 'true' : '')}
+            onChange={(e) =>
+              updateParam("inStockOnly", e.target.checked ? "true" : "")
+            }
           />
           In stock only
         </label>
@@ -93,7 +120,9 @@ export function ProductListPage() {
         <p className="text-gray-500">No products match these filters.</p>
       ) : (
         <>
-          <div className={`grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${isFetching ? 'opacity-60' : ''}`}>
+          <div
+            className={`grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${isFetching ? "opacity-60" : ""}`}
+          >
             {data.items.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -125,5 +154,5 @@ export function ProductListPage() {
         </>
       )}
     </div>
-  )
+  );
 }
