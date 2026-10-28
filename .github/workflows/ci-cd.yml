@@ -2,8 +2,17 @@ name: Build, publish and deploy to MonsterASP.NET
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'RooftopGarden.web/**'
+      - '.github/workflows/ci-cd.yml'
+
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - 'RooftopGarden.web/**'
+      - '.github/workflows/ci-cd.yml'
+
+  workflow_dispatch:
 
 concurrency:
   group: production-deploy
@@ -76,7 +85,7 @@ jobs:
       - build_test
       - security  
     
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     
     runs-on: windows-latest
     steps:
