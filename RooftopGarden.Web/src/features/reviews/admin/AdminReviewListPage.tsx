@@ -4,7 +4,7 @@ import {
   useAdminDeleteReviewMutation,
 } from "../reviewsApi";
 import { useConfirmDialog } from "../../../components/useConfirmDialog";
-import { Container, Button, Spinner } from "../../../components/ui";
+import { Container, Button } from "../../../components/ui";
 import { usePageTitle } from "../../../hooks/usePageTitle";
 
 const PAGE_SIZE = 20;
