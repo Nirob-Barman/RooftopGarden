@@ -38,8 +38,8 @@ export function ProfilePage() {
     resolver: zodResolver(profileSchema),
   });
 
+  
   const profileImageUrl = watch("profileImageUrl");
-  const fullName = watch("fullName");
 
   useEffect(() => {
     if (profile) {
