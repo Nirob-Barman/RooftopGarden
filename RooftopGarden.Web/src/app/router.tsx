@@ -27,6 +27,10 @@ const AdminCategoryList = lazy(() =>
   import('../features/catalog/admin/AdminCategoryList').then((m) => ({ default: m.AdminCategoryList })),
 )
 
+const AdminCategoryForm = lazy(() =>
+  import("../features/catalog/admin/AdminCategoryForm").then((m) => ({ default: m.AdminCategoryForm })),
+)
+
 const CartPage = lazy(() => import('../features/cart/CartPage').then((m) => ({ default: m.CartPage })))
 
 const CheckoutPage = lazy(() => import('../features/orders/CheckoutPage').then((m) => ({ default: m.CheckoutPage })))
@@ -148,6 +152,14 @@ export const router = createBrowserRouter([
               {
                 path: "/admin/categories",
                 element: withSuspense(<AdminCategoryList />),
+              },
+              {
+                path: "/admin/categories/new",
+                element: withSuspense(<AdminCategoryForm />),
+              },
+              {
+                path: "/admin/categories/:id/edit",
+                element: withSuspense(<AdminCategoryForm />),
               },
               {
                 path: "/admin/orders",
