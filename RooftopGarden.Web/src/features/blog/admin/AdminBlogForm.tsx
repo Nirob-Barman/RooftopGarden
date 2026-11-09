@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -40,7 +40,7 @@ export function AdminBlogForm() {
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     formState: { errors },
   } = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
@@ -51,9 +51,9 @@ export function AdminBlogForm() {
     },
   });
 
-  const imageUrl = watch("imageUrl");
-  const title = watch("title");
-  const content = watch("content");
+  const imageUrl = useWatch({ control, name: "imageUrl" });
+  const title = useWatch({ control, name: "title" });
+  const content = useWatch({ control, name: "content" });
 
   const isSaving = isCreating || isUpdating;
 
