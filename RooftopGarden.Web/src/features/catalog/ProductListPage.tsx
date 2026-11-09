@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useGetProductsQuery, type ProductFilterParams } from "./productsApi";
 import { useGetCategoriesQuery } from "./categoriesApi";
@@ -19,8 +19,23 @@ export function ProductListPage() {
 
   const [showFilters, setShowFilters] = useState(false);
 
+  const previousUrlSearch = useRef(searchParams.get("search") ?? "");
+
   const debouncedSearch = useDebounce(searchInput, 500);
 
+  // Synchronize the search input when browser navigation changes the URL.
+  useEffect(() => {
+    const currentUrlSearch = searchParams.get("search") ?? "";
+
+    if (currentUrlSearch !== previousUrlSearch.current) {
+      previousUrlSearch.current = currentUrlSearch;
+
+      // Browser navigation is the only external change that needs synchronization.
+      setSearchInput(currentUrlSearch);
+    }
+  }, [searchParams]);
+
+  // Update URL when the debounced search changes.
   useEffect(() => {
     const currentSearch = searchParams.get("search") ?? "";
     const nextSearch = debouncedSearch.trim();
@@ -38,11 +53,6 @@ export function ProductListPage() {
     next.delete("page");
     setSearchParams(next, { replace: true });
   }, [debouncedSearch, searchParams, setSearchParams]);
-
-  // Keep search input synchronized with browser navigation.
-  useEffect(() => {
-    setSearchInput(searchParams.get("search") ?? "");
-  }, [searchParams]);
 
   const filter: ProductFilterParams = {
     search: searchParams.get("search") || undefined,
