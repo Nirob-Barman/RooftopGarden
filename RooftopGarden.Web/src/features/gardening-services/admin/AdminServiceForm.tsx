@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate, useParams } from "react-router-dom";
@@ -86,7 +86,7 @@ export function AdminServiceForm() {
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     formState: { errors },
   } = useForm<ServiceFormValues>({
     resolver: zodResolver(serviceSchema),
@@ -99,8 +99,15 @@ export function AdminServiceForm() {
     },
   });
 
-  const imageUrl = watch("imageUrl");
-  const name = watch("name");
+  const imageUrl = useWatch({
+    control,
+    name: "imageUrl",
+  });
+
+  const name = useWatch({
+    control,
+    name: "name",
+  });
 
   const isSaving = isCreating || isUpdating;
 
