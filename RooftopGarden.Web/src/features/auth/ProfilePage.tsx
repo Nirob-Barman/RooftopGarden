@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useGetProfileQuery, useUpdateProfileMutation } from "./authApi";
@@ -32,14 +32,17 @@ export function ProfilePage() {
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     formState: { errors, isDirty },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
   });
 
   
-  const profileImageUrl = watch("profileImageUrl");
+  const profileImageUrl = useWatch({
+    control,
+    name: "profileImageUrl",
+  });
 
   useEffect(() => {
     if (profile) {
